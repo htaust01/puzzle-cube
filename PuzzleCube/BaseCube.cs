@@ -3,7 +3,7 @@ namespace PuzzleCube
 {
 	public class BaseCube
 	{
-		public int Sides { get; set; }
+		public int SideLength { get; set; }
 
 		public int[,] Up { get; set; }
         public int[,] Down { get; set; }
@@ -14,7 +14,7 @@ namespace PuzzleCube
 
         public BaseCube(int sides)
 		{
-			this.Sides = sides;
+			this.SideLength = sides;
 			Up = new int[,] { { 1, 1 }, { 1, 1 } };
             Down = new int[,] { { 6, 6 }, { 6, 6 } };
             Right = new int[,] { { 5, 5 }, { 5, 5 } };

@@ -5,6 +5,8 @@ VisualStudioVersion = 25.0.1703.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PuzzleCube", "PuzzleCube\PuzzleCube.csproj", "{BD68E765-C0EB-41E1-AD8B-023E298BE909}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtensionMethodsTests", "ExtensionMethodsTests\ExtensionMethodsTests.csproj", "{AF62057F-B711-48B4-ABB5-4609F62A6F26}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{BD68E765-C0EB-41E1-AD8B-023E298BE909}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD68E765-C0EB-41E1-AD8B-023E298BE909}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD68E765-C0EB-41E1-AD8B-023E298BE909}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF62057F-B711-48B4-ABB5-4609F62A6F26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF62057F-B711-48B4-ABB5-4609F62A6F26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF62057F-B711-48B4-ABB5-4609F62A6F26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF62057F-B711-48B4-ABB5-4609F62A6F26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

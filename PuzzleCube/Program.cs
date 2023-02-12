@@ -4,45 +4,7 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        //int[,] up1 = { { 1, 1 }, { 1, 1 } };
-        //int[,] front1 = { { 3, 3 }, { 3, 3 } };
-        //int[,] right1 = { { 5, 5 }, { 5, 5 } };
-        //Console.WriteLine("Cube 1");
-        //Console.WriteLine();
-        //drawCube(up1, front1, right1);
-        //int[,] up2 = { { 1, 2 }, { 4, 1 } };
-        //int[,] front2 = { { 6, 3 }, { 2, 5 } };
-        //int[,] right2 = { { 5, 1 }, { 4, 5 } };
-        //Console.WriteLine();
-        //Console.WriteLine("Cube 2");
-        //Console.WriteLine();
-        //drawCube(up2, front2, right2);
         BaseCube cube = new BaseCube(2);
-        //drawCube(cube);
-        //cube.RotateX();
-        //drawCube(cube);
-        //cube.RotateX();
-        //drawCube(cube);
-        //cube.RotateX();
-        //drawCube(cube);
-        //cube.RotateX();
-        //drawCube(cube);
-        //cube.RotateY();
-        //drawCube(cube);
-        //cube.RotateY();
-        //drawCube(cube);
-        //cube.RotateY();
-        //drawCube(cube);
-        //cube.RotateY();
-        //drawCube(cube);
-        //cube.RotateZ();
-        //drawCube(cube);
-        //cube.RotateZ();
-        //drawCube(cube);
-        //cube.RotateZ();
-        //drawCube(cube);
-        //cube.RotateZ();
-        //drawCube(cube);
         Console.WriteLine("Welcome to Puzzle Cube!!!");
         Console.WriteLine();
         Console.WriteLine("Press Enter to Play");
