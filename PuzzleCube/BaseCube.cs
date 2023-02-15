@@ -12,15 +12,21 @@ namespace PuzzleCube
         public int[,] Front { get; set; }
         public int[,] Back { get; set; }
 
-        public BaseCube(int sides)
+        public BaseCube(int sideLength)
 		{
-			this.SideLength = sides;
-			Up = new int[,] { { 1, 1 }, { 1, 1 } };
-            Down = new int[,] { { 6, 6 }, { 6, 6 } };
-            Right = new int[,] { { 5, 5 }, { 5, 5 } };
-            Left = new int[,] { { 2, 2 }, { 2, 2 } };
-            Front = new int[,] { { 3, 3 }, { 3, 3 } };
-            Back = new int[,] { { 4, 4 }, { 4, 4 } };
+			this.SideLength = sideLength;
+            this.Up = new int[sideLength, sideLength];
+            this.Up.Fill2DArray(1);
+            this.Down = new int[sideLength, sideLength];
+            this.Down.Fill2DArray(6);
+            this.Right = new int[sideLength, sideLength];
+            this.Right.Fill2DArray(2);
+            this.Left = new int[sideLength, sideLength];
+            this.Left.Fill2DArray(5);
+            this.Front = new int[sideLength, sideLength];
+            this.Front.Fill2DArray(3);
+            this.Back = new int[sideLength, sideLength];
+            this.Back.Fill2DArray(4);
         }
 
         public void RotateX()
@@ -30,16 +36,10 @@ namespace PuzzleCube
             Front = Down;
             Down = Back;
             Back = temp;
-            int temp2 = Right[0, 0];
-            Right[0, 0] = Right[1, 0];
-            Right[1, 0] = Right[1, 1];
-            Right[1, 1] = Right[0, 1];
-            Right[0, 1] = temp2;
-            temp2 = Left[0, 0];
-            Left[0, 0] = Left[0, 1];
-            Left[0, 1] = Left[1, 1];
-            Left[1, 1] = Left[1, 0];
-            Left[1, 0] = temp2;
+            Back.Rotate2DArray(2);
+            Down.Rotate2DArray(2);
+            Right.Rotate2DArray(1);
+            Left.Rotate2DArray(3);
         }
 
         public void RotateY()
@@ -49,16 +49,8 @@ namespace PuzzleCube
             Right = Back;
             Back = Left;
             Left = temp;
-            int temp2 = Up[0, 0];
-            Up[0, 0] = Up[1, 0];
-            Up[1, 0] = Up[1, 1];
-            Up[1, 1] = Up[0, 1];
-            Up[0, 1] = temp2;
-            temp2 = Down[0, 0];
-            Down[0, 0] = Down[0, 1];
-            Down[0, 1] = Down[1, 1];
-            Down[1, 1] = Down[1, 0];
-            Down[1, 0] = temp2;
+            Up.Rotate2DArray(1);
+            Down.Rotate2DArray(3);
         }
 
         public void RotateZ()
@@ -68,16 +60,70 @@ namespace PuzzleCube
             Left = Down;
             Down = Right;
             Right = temp;
-            int temp2 = Front[0, 0];
-            Front[0, 0] = Front[1, 0];
-            Front[1, 0] = Front[1, 1];
-            Front[1, 1] = Front[0, 1];
-            Front[0, 1] = temp2;
-            temp2 = Back[0, 0];
-            Back[0, 0] = Back[0, 1];
-            Back[0, 1] = Back[1, 1];
-            Back[1, 1] = Back[1, 0];
-            Back[1, 0] = temp2;
+            Up.Rotate2DArray(1);
+            Left.Rotate2DArray(1);
+            Down.Rotate2DArray(1);
+            Right.Rotate2DArray(1);
+            Front.Rotate2DArray(1);
+            Back.Rotate2DArray(3);
+        }
+
+        public bool IsSolved()
+        {
+            if (!Up.AllCellsEqual())
+                return false;
+            if (!Down.AllCellsEqual())
+                return false;
+            if (!Right.AllCellsEqual())
+                return false;
+            if (!Left.AllCellsEqual())
+                return false;
+            if (!Front.AllCellsEqual())
+                return false;
+            if (!Back.AllCellsEqual())
+                return false;
+            return true;
+        }
+
+        public void Display5Faces()
+        {
+            ConsoleColor initialBackgroundColor = Console.BackgroundColor;
+            int[,] face;
+            int[] blanks = new int[] { 0, 2, 6, 8 };
+            int[,] blankFace = new int[SideLength, SideLength];
+            for(int i = 0; i < 9; i++)
+            {
+                switch (i)
+                {
+                    case 1:
+                        face = Up;
+                        break;
+                    case 3:
+                        face = Left;
+                        break;
+                    case 4:
+                        face = Front;
+                        break;
+                    case 5:
+                        face = Right;
+                        break;
+                    case 7:
+                        face = Down;
+                        break;
+                    default:
+                        break;
+                }
+                for(int j = 0; j < 3; j++)
+                {
+
+                    Console.Write("      ");
+                }
+            }
+        }
+
+        public void Display3D()
+        {
+
         }
 
         public void TwistU()

@@ -1,16 +1,21 @@
-﻿using PuzzleCube;
+﻿using System.Data.Common;
+using System.Drawing;
+using PuzzleCube;
 
 internal class Program
 {
+    public static ConsoleColor initialBackgroundColor = Console.BackgroundColor;
+
     private static void Main(string[] args)
     {
         BaseCube cube = new BaseCube(2);
+        bool viewAs3DCube = true;
         Console.WriteLine("Welcome to Puzzle Cube!!!");
         Console.WriteLine();
         Console.WriteLine("Press Enter to Play");
         Console.ReadLine();
         Console.Clear();
-        drawCube(cube);
+        Display3D(cube);
         Console.WriteLine("Enter 'X', 'Y', or 'Z' to rotate the cube clockwise around that axis");
         Console.WriteLine("Enter 'U', 'D', 'R', 'L', 'F', or 'B' to twist that face of the cube clockwise");
         Console.WriteLine("Enter 'exit' to stop playing.");
@@ -24,45 +29,48 @@ internal class Program
             {
                 case "x":
                     cube.RotateX();
-                    drawCube(cube);
                     break;
                 case "y":
                     cube.RotateY();
-                    drawCube(cube);
                     break;
                 case "z":
                     cube.RotateZ();
-                    drawCube(cube);
                     break;
                 case "u":
                     cube.TwistU();
-                    drawCube(cube);
                     break;
                 case "d":
                     cube.TwistD();
-                    drawCube(cube);
                     break;
                 case "r":
                     cube.TwistR();
-                    drawCube(cube);
                     break;
                 case "l":
                     cube.TwistL();
-                    drawCube(cube);
                     break;
                 case "f":
                     cube.TwistF();
-                    drawCube(cube);
                     break;
                 case "b":
                     cube.TwistB();
-                    drawCube(cube);
+                    break;
+                case "v":
+                    viewAs3DCube = !viewAs3DCube;
                     break;
                 default:
                     Console.WriteLine("Invalid Command");
                     break;
             }
+            if (viewAs3DCube)
+                Display3D(cube);
+            else
+                Display2D(cube);
             Console.WriteLine();
+            if(cube.IsSolved())
+            {
+                Console.WriteLine("You have solved the Cube!");
+                Console.WriteLine();
+            }
             Console.WriteLine("Enter 'X', 'Y', or 'Z' to rotate the cube clockwise around that axis");
             Console.WriteLine("Enter 'U', 'D', 'R', 'L', 'F', or 'B' to twist that face of the cube clockwise");
             Console.WriteLine("Enter 'exit' to stop playing.");
@@ -73,7 +81,53 @@ internal class Program
         
     }
 
-    static void drawCube(BaseCube cube)
+    static void Display2D(BaseCube cube)
+    {
+        int[,] blankFace = new int[cube.SideLength, cube.SideLength];
+        for(int faceRow = 0; faceRow < 3; faceRow++)
+        {
+            for(int row = 0; row < cube.SideLength; row++)
+            {
+                for(int repeat = 0; repeat < 3; repeat++)
+                {
+                    switch (faceRow)
+                    {
+                        case 0:
+                            PrintFaceRow(blankFace, row);
+                            PrintFaceRow(cube.Up, row);
+                            Console.WriteLine();
+                            break;
+                        case 1:
+                            PrintFaceRow(cube.Left, row);
+                            PrintFaceRow(cube.Front, row);
+                            PrintFaceRow(cube.Right, row);
+                            Console.WriteLine();
+                            break;
+                        case 2:
+                            PrintFaceRow(blankFace, row);
+                            PrintFaceRow(cube.Down, row);
+                            Console.WriteLine();
+                            break;
+                    }
+                }
+                Console.WriteLine();
+            }
+        }
+    }
+
+    // Display2D helper function
+    static void PrintFaceRow(int[,] face, int row)
+    {
+        for(int column = 0; column < face.GetLength(1); column++)
+        {
+            Console.BackgroundColor = getColor(face[row, column]);
+            Console.Write("      ");
+            Console.BackgroundColor = getColor(0);
+            Console.Write("  ");
+        }
+    }
+
+    static void Display3D(BaseCube cube)
     {
         int[,] up = cube.Up;
         int[,] front = cube.Front;
@@ -303,81 +357,29 @@ internal class Program
 
     static ConsoleColor getColor(int i)
     {
-        switch(i)
+        switch (i)
         {
+            case 0:
+                return initialBackgroundColor;
             case 1:
                 return ConsoleColor.White;
             case 2:
-                return ConsoleColor.DarkGreen;
+                return ConsoleColor.DarkBlue;
             case 3:
                 return ConsoleColor.Red;
             case 4:
                 return ConsoleColor.DarkMagenta;
             case 5:
-                return ConsoleColor.DarkBlue;
+                return ConsoleColor.DarkGreen;
             case 6:
                 return ConsoleColor.Yellow;
             default:
                 return ConsoleColor.Gray;
         }
     }
-
-    static void colorCube()
-    {
-        Console.BackgroundColor = ConsoleColor.Black;
-        Console.ForegroundColor = ConsoleColor.Black;
-        Console.Clear();
-        Console.WriteLine("     _ _    ");
-        Console.Write("   ");
-        Console.BackgroundColor = ConsoleColor.Red;
-        Console.Write("/_/_");
-        Console.BackgroundColor = ConsoleColor.White;
-        //Console.ForegroundColor = ConsoleColor.Black;
-        Console.Write("/\\");
-        Console.BackgroundColor = ConsoleColor.Black;
-        Console.WriteLine("   ");
-        Console.Write("  ");
-        Console.BackgroundColor = ConsoleColor.Red;
-        //Console.ForegroundColor = ConsoleColor.White;
-        Console.Write("/_/_");
-        Console.BackgroundColor = ConsoleColor.White;
-        //Console.ForegroundColor = ConsoleColor.Black;
-        Console.Write("/\\/\\");
-        Console.BackgroundColor = ConsoleColor.Black;
-        Console.WriteLine("  ");
-        Console.Write("  ");
-        Console.BackgroundColor = ConsoleColor.Blue;
-        //Console.ForegroundColor = ConsoleColor.White;
-        Console.Write("\\_\\_");
-        Console.BackgroundColor = ConsoleColor.White;
-        //Console.ForegroundColor = ConsoleColor.Black;
-        Console.Write("\\/\\/");
-        Console.BackgroundColor = ConsoleColor.Black;
-        Console.WriteLine("  ");
-        Console.Write("   ");
-        Console.BackgroundColor = ConsoleColor.Blue;
-        //Console.ForegroundColor = ConsoleColor.White;
-        Console.Write("\\_\\_");
-        Console.BackgroundColor = ConsoleColor.White;
-        //Console.ForegroundColor = ConsoleColor.Black;
-        Console.Write("\\/");
-        Console.BackgroundColor = ConsoleColor.Black;
-        Console.WriteLine("   ");
-        Console.WriteLine("            ");
-        Console.WriteLine();
-        Console.WriteLine();
-        Console.ReadLine();
-    }
 }
 
 
-
-//  
-//  
-//  
-//  
-//  
-//  
 //     _ _
 //   /_/_/\
 //  /_/_/\/\
@@ -398,8 +400,6 @@ internal class Program
 //      \     \     \  /
 //       \_____\_____\/
 //
-//
-//
 //         ______ ______
 //       /      /      /\
 //      /      /      /  \
@@ -413,10 +413,6 @@ internal class Program
 //     \      \      \    /
 //      \      \      \  /
 //       \______\______\/
-//
-//
-//
-//
 //
 //            ______ ______ ______
 //          /      /      /      /\
@@ -437,6 +433,4 @@ internal class Program
 //        \      \      \      \    /
 //         \      \      \      \  /
 //          \______\______\______\/
-//
-//
 //

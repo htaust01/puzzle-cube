@@ -90,6 +90,25 @@ namespace PuzzleCube
 					arr[row, column] = fillValue;
 			}
 		}
+
+		/// <summary>
+		/// Returns true if all cells have the same value, otherwise returns false
+		/// </summary>
+		/// <param name="arr"></param>
+		/// <returns></returns>
+		public static bool AllCellsEqual(this int[,] arr)
+		{
+			int cellValue = arr[0, 0];
+			for(int row = 0; row < arr.GetLength(0); row++)
+			{
+				for(int column = 0; column < arr.GetLength(1); column++)
+				{
+					if (arr[row, column] != cellValue)
+						return false;
+				}
+			}
+			return true;
+		}
 	}
 }
 

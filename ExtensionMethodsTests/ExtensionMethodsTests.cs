@@ -136,4 +136,32 @@ public class TwoDimensionalArrayExtensionMethodTests
         Assert.AreEqual(expected[0, 1], arr[0, 1]);
         Assert.AreEqual(expected[1, 1], arr[1, 1]);
     }
+
+    [TestMethod]
+    public void AllCellsEqual_Returns_True_When_All_Cells_Equal()
+    {
+        // Arrange
+        int[,] arr = new int[2, 2] { { 1, 1}, { 1, 1} };
+        bool expected = true;
+
+        // Act
+        bool result = arr.AllCellsEqual();
+
+        //Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void AllCellsEqual_Returns_False_When_All_Cells_Not_Equal()
+    {
+        // Arrange
+        int[,] arr = new int[2, 2] { { 1, 1 }, { 1, 2 } };
+        bool expected = false;
+
+        // Act
+        bool result = arr.AllCellsEqual();
+
+        //Assert
+        Assert.AreEqual(expected, result);
+    }
 }
