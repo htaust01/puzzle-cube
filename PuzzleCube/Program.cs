@@ -13,9 +13,14 @@ internal class Program
         Console.WriteLine("Welcome to Puzzle Cube!!!");
         Console.WriteLine();
         Console.WriteLine("Press Enter to Play");
+        // Begin Testing NewDisplay3D
+        //Console.WriteLine();
+        //NewDisplay3D(cube);
+        //Console.WriteLine();
+        // End Testing NewDisplay3D
         Console.ReadLine();
         Console.Clear();
-        Display3D(cube);
+        NewDisplay3D(cube);
         Console.WriteLine("Enter 'X', 'Y', or 'Z' to rotate the cube clockwise around that axis");
         Console.WriteLine("Enter 'U', 'D', 'R', 'L', 'F', or 'B' to twist that face of the cube clockwise");
         Console.WriteLine("Enter 'exit' to stop playing.");
@@ -62,7 +67,7 @@ internal class Program
                     break;
             }
             if (viewAs3DCube)
-                Display3D(cube);
+                NewDisplay3D(cube);
             else
                 Display2D(cube);
             Console.WriteLine();
@@ -78,7 +83,6 @@ internal class Program
             input = Console.ReadLine();
             input = input.ToLower();
         }
-        
     }
 
     static void Display2D(BaseCube cube)
@@ -120,11 +124,207 @@ internal class Program
     {
         for(int column = 0; column < face.GetLength(1); column++)
         {
-            Console.BackgroundColor = getColor(face[row, column]);
+            Console.BackgroundColor = GetColor(face[row, column]);
             Console.Write("      ");
-            Console.BackgroundColor = getColor(0);
+            Console.BackgroundColor = GetColor(0);
             Console.Write("  ");
         }
+    }
+
+    static void NewDisplay3D(BaseCube cube)
+    {
+        int totalLines = cube.SideLength * 8 - 1;
+        for (int line = 0; line < totalLines; line++)
+        {
+            PrintSpaces(line, totalLines);
+            if((line + 1) % 4 != 0)
+            {
+                if (line < totalLines / 2)
+                    PrintFaceRow(cube.Up, line / 4);
+                else if (line > totalLines / 2)
+                    PrintFaceRow(cube.Front, (line - 4 * cube.SideLength) / 4);
+            }
+            // Adjust Spaces for some rows
+            if(line < totalLines / 2)
+            {
+                if(line % 4 == 0)
+                    Console.Write("  ");
+            }
+            else
+            {
+                if ((line - 2) % 4 == 0)
+                    Console.Write("  ");
+            }
+
+            PrintRightFace(cube, line);
+            Console.WriteLine();
+        }
+    }
+
+    static void PrintSpaces(int line, int totalLines)
+    {
+        Console.BackgroundColor = GetColor(0);
+        
+        int numSpaces = Math.Abs(line - totalLines / 2);
+        for (int i = 0; i < numSpaces; i++)
+            Console.Write(" ");
+        if (line == totalLines / 2 || (line + 1) % 4 == 0)
+        {
+            for (int i = 0; i < totalLines + 1; i++)
+                Console.Write(" ");
+        }
+    }
+
+    static void PrintRightFace(BaseCube cube, int line)
+    {
+        if (line == 0 || line == (8 * cube.SideLength - 2))
+            return;
+        int totalLines = cube.SideLength * 8 - 1;
+        int row = 0;
+        int column = 0;
+        int halfLine = totalLines / 2;
+        int absDiff = Math.Abs(halfLine - line);
+        int pointsToAdd = cube.SideLength;
+        int cellsToPrint = 0;
+        if(absDiff <= 2)
+        {
+            cellsToPrint += pointsToAdd;
+        }
+        absDiff -= 2;
+        pointsToAdd--;
+        while (absDiff >= 0)
+        {
+            if(absDiff <= 4)
+            {
+                cellsToPrint += pointsToAdd;
+            }
+            absDiff -= 4;
+            pointsToAdd--;
+        }
+        List<int[]> cells = GetCells(cube.SideLength, line);
+        switch(line % 4)
+        {
+            case 1:
+                for(int i = 0; i < cellsToPrint; i++)
+                {
+                    Console.BackgroundColor = GetColor(cube.Right[cells[i][0], cells[i][1]]);
+                    Console.Write("  ");
+                    Console.BackgroundColor = GetColor(0);
+                    Console.Write("  ");
+                }
+                break;
+            case 3:
+                for (int i = 0; i < cellsToPrint; i++)
+                {
+                    Console.BackgroundColor = GetColor(cube.Right[cells[i][0], cells[i][1]]);
+                    Console.Write("      ");
+                    Console.BackgroundColor = GetColor(0);
+                    Console.Write("  ");
+                }
+                break;
+            default:
+                for(int i = 0; i < cellsToPrint; i++)
+                {
+                    Console.BackgroundColor = GetColor(cube.Right[cells[i][0], cells[i][1]]);
+                    Console.Write("    ");
+                    Console.BackgroundColor = GetColor(0);
+                    Console.Write("    ");
+                }
+                break;
+        }
+    }
+
+    static List<int[]> GetCells(int SideLength, int line)
+    {
+        List<int[]> cells = new List<int[]>();
+        if (line == 1)
+        {
+            cells.Add(new int[] { 0, SideLength - 1 });
+            return cells;
+        }    
+        else if (line == SideLength * 8 - 3)
+        {
+            cells.Add(new int[] { SideLength - 1, 0 });
+            return cells;
+        }
+        int diagonal = (line - 2) / 4 + 1;
+        if(line % 4 == 1)
+        {
+            // use same algorithm as below to make two lists then weave lists together
+            List<int[]> cells1 = new List<int[]>();
+            int numOfCells = SideLength - Math.Abs(SideLength - diagonal);
+            for (int i = 0; i < numOfCells; i++)
+            {
+                int[] cell = new int[2];
+                if (diagonal <= SideLength)
+                {
+                    cell[0] = i;
+                    cell[1] = SideLength - diagonal + i;
+                }
+                else
+                {
+                    cell[0] = diagonal - SideLength + i;
+                    cell[1] = i;
+                }
+                cells1.Add(cell);
+            }
+            diagonal++;
+            List<int[]> cells2 = new List<int[]>();
+            numOfCells = SideLength - Math.Abs(SideLength - diagonal);
+            for (int i = 0; i < numOfCells; i++)
+            {
+                int[] cell = new int[2];
+                if (diagonal <= SideLength)
+                {
+                    cell[0] = i;
+                    cell[1] = SideLength - diagonal + i;
+                }
+                else
+                {
+                    cell[0] = diagonal - SideLength + i;
+                    cell[1] = i;
+                }
+                cells2.Add(cell);
+            }
+            if(cells1.Count > cells2.Count)
+            {
+                for(int j = 0; j < cells2.Count; j++)
+                {
+                    cells.Add(cells1[j]);
+                    cells.Add(cells2[j]);
+                }
+                cells.Add(cells1[cells1.Count - 1]);
+            }
+            else
+            {
+                for (int j = 0; j < cells1.Count; j++)
+                {
+                    cells.Add(cells2[j]);
+                    cells.Add(cells1[j]);
+                }
+                cells.Add(cells2[cells2.Count - 1]);
+            }
+        }
+        else
+        {
+            int numOfCells = SideLength - Math.Abs(SideLength - diagonal);
+            for(int i = 0; i < numOfCells; i++)
+            {
+                int[] cell = new int[2];
+                if (diagonal <= SideLength)
+                {
+                    cell[0] = i;
+                    cell[1] = SideLength - diagonal + i;
+                }
+                else
+                {
+                    cell[0] = diagonal - SideLength + i;
+                    cell[1] = i;
+                }
+                cells.Add(cell);
+            }
+        }
+        return cells;
     }
 
     static void Display3D(BaseCube cube)
@@ -136,226 +336,226 @@ internal class Program
         ConsoleColor initialBackgroundColor = Console.BackgroundColor;
         Console.WriteLine();
         Console.Write("      ");
-        Console.BackgroundColor = getColor(up[0, 0]);
+        Console.BackgroundColor = GetColor(up[0, 0]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.Write("  ");
-        Console.BackgroundColor = getColor(up[0, 1]);
+        Console.BackgroundColor = GetColor(up[0, 1]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.WriteLine();
         Console.Write("     ");
-        Console.BackgroundColor = getColor(up[0, 0]);
+        Console.BackgroundColor = GetColor(up[0, 0]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.Write("  ");
-        Console.BackgroundColor = getColor(up[0, 1]);
+        Console.BackgroundColor = GetColor(up[0, 1]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         // right1
         Console.Write("  ");
-        Console.BackgroundColor = getColor(right[0, 1]);
+        Console.BackgroundColor = GetColor(right[0, 1]);
         Console.Write("  ");
         Console.BackgroundColor = initialBackgroundColor;
         // end right1
         Console.WriteLine();
         Console.Write("    ");
-        Console.BackgroundColor = getColor(up[0, 0]);
+        Console.BackgroundColor = GetColor(up[0, 0]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.Write("  ");
-        Console.BackgroundColor = getColor(up[0, 1]);
+        Console.BackgroundColor = GetColor(up[0, 1]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         // right2
         Console.Write("  ");
-        Console.BackgroundColor = getColor(right[0, 1]);
+        Console.BackgroundColor = GetColor(right[0, 1]);
         Console.Write("    ");
         Console.BackgroundColor = initialBackgroundColor;
         // end right2
         Console.WriteLine();
         // right3
         Console.Write("                   ");
-        Console.BackgroundColor = getColor(right[0, 1]);
+        Console.BackgroundColor = GetColor(right[0, 1]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         // end right3
         Console.WriteLine();
         Console.Write("  ");
-        Console.BackgroundColor = getColor(up[1, 0]);
+        Console.BackgroundColor = GetColor(up[1, 0]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.Write("  ");
-        Console.BackgroundColor = getColor(up[1, 1]);
+        Console.BackgroundColor = GetColor(up[1, 1]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         // right4
         Console.Write("    ");
-        Console.BackgroundColor = getColor(right[0, 1]);
+        Console.BackgroundColor = GetColor(right[0, 1]);
         Console.Write("    ");
         Console.BackgroundColor = initialBackgroundColor;
         //end right4
         Console.WriteLine();
         Console.Write(" ");
-        Console.BackgroundColor = getColor(up[1, 0]);
+        Console.BackgroundColor = GetColor(up[1, 0]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.Write("  ");
-        Console.BackgroundColor = getColor(up[1, 1]);
+        Console.BackgroundColor = GetColor(up[1, 1]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         // right5
         Console.Write("  ");
-        Console.BackgroundColor = getColor(right[0, 0]);
+        Console.BackgroundColor = GetColor(right[0, 0]);
         Console.Write("  ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.Write("  ");
-        Console.BackgroundColor = getColor(right[0, 1]);
+        Console.BackgroundColor = GetColor(right[0, 1]);
         Console.Write("  ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.Write("  ");
-        Console.BackgroundColor = getColor(right[1, 1]);
+        Console.BackgroundColor = GetColor(right[1, 1]);
         Console.Write("  ");
         Console.BackgroundColor = initialBackgroundColor;
         //end right5
         Console.WriteLine();
         Console.Write("");
-        Console.BackgroundColor = getColor(up[1, 0]);
+        Console.BackgroundColor = GetColor(up[1, 0]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.Write("  ");
-        Console.BackgroundColor = getColor(up[1, 1]);
+        Console.BackgroundColor = GetColor(up[1, 1]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         // right6
         Console.Write("  ");
-        Console.BackgroundColor = getColor(right[0, 0]);
+        Console.BackgroundColor = GetColor(right[0, 0]);
         Console.Write("    ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.Write("    ");
-        Console.BackgroundColor = getColor(right[1, 1]);
+        Console.BackgroundColor = GetColor(right[1, 1]);
         Console.Write("    ");
         Console.BackgroundColor = initialBackgroundColor;
         // end right6
         Console.WriteLine();
         // right7
         Console.Write("               ");
-        Console.BackgroundColor = getColor(right[0, 0]);
+        Console.BackgroundColor = GetColor(right[0, 0]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.Write("  ");
-        Console.BackgroundColor = getColor(right[1, 1]);
+        Console.BackgroundColor = GetColor(right[1, 1]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         //end right7
         Console.WriteLine();
         Console.Write("");
-        Console.BackgroundColor = getColor(front[0, 0]);
+        Console.BackgroundColor = GetColor(front[0, 0]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.Write("  ");
-        Console.BackgroundColor = getColor(front[0, 1]);
+        Console.BackgroundColor = GetColor(front[0, 1]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         // right8
         Console.Write("  ");
-        Console.BackgroundColor = getColor(right[0, 0]);
+        Console.BackgroundColor = GetColor(right[0, 0]);
         Console.Write("    ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.Write("    ");
-        Console.BackgroundColor = getColor(right[1, 1]);
+        Console.BackgroundColor = GetColor(right[1, 1]);
         Console.Write("    ");
         Console.BackgroundColor = initialBackgroundColor;
         //end right8
         Console.WriteLine();
         Console.Write(" ");
-        Console.BackgroundColor = getColor(front[0, 0]);
+        Console.BackgroundColor = GetColor(front[0, 0]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.Write("  ");
-        Console.BackgroundColor = getColor(front[0, 1]);
+        Console.BackgroundColor = GetColor(front[0, 1]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         // right9
         Console.Write("  ");
-        Console.BackgroundColor = getColor(right[0, 0]);
+        Console.BackgroundColor = GetColor(right[0, 0]);
         Console.Write("  ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.Write("  ");
-        Console.BackgroundColor = getColor(right[1, 0]);
+        Console.BackgroundColor = GetColor(right[1, 0]);
         Console.Write("  ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.Write("  ");
-        Console.BackgroundColor = getColor(right[1, 1]);
+        Console.BackgroundColor = GetColor(right[1, 1]);
         Console.Write("  ");
         Console.BackgroundColor = initialBackgroundColor;
         // end right9
         Console.WriteLine();
         Console.Write("  ");
-        Console.BackgroundColor = getColor(front[0, 0]);
+        Console.BackgroundColor = GetColor(front[0, 0]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.Write("  ");
-        Console.BackgroundColor = getColor(front[0, 1]);
+        Console.BackgroundColor = GetColor(front[0, 1]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         // right10
         Console.Write("    ");
-        Console.BackgroundColor = getColor(right[1, 0]);
+        Console.BackgroundColor = GetColor(right[1, 0]);
         Console.Write("    ");
         Console.BackgroundColor = initialBackgroundColor;
         // end right10
         Console.WriteLine();
         // right11
         Console.Write("                   ");
-        Console.BackgroundColor = getColor(right[1, 0]);
+        Console.BackgroundColor = GetColor(right[1, 0]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         //end right11
         Console.WriteLine();
         Console.Write("    ");
-        Console.BackgroundColor = getColor(front[1, 0]);
+        Console.BackgroundColor = GetColor(front[1, 0]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.Write("  ");
-        Console.BackgroundColor = getColor(front[1, 1]);
+        Console.BackgroundColor = GetColor(front[1, 1]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         // right12
         Console.Write("  ");
-        Console.BackgroundColor = getColor(right[1, 0]);
+        Console.BackgroundColor = GetColor(right[1, 0]);
         Console.Write("    ");
         Console.BackgroundColor = initialBackgroundColor;
         // end right12
         Console.WriteLine();
         Console.Write("     ");
-        Console.BackgroundColor = getColor(front[1, 0]);
+        Console.BackgroundColor = GetColor(front[1, 0]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.Write("  ");
-        Console.BackgroundColor = getColor(front[1, 1]);
+        Console.BackgroundColor = GetColor(front[1, 1]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         // right13
         Console.Write("  ");
-        Console.BackgroundColor = getColor(right[1, 0]);
+        Console.BackgroundColor = GetColor(right[1, 0]);
         Console.Write("  ");
         Console.BackgroundColor = initialBackgroundColor;
         //end right13
         Console.WriteLine();
         Console.Write("      ");
-        Console.BackgroundColor = getColor(front[1, 0]);
+        Console.BackgroundColor = GetColor(front[1, 0]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.Write("  ");
-        Console.BackgroundColor = getColor(front[1, 1]);
+        Console.BackgroundColor = GetColor(front[1, 1]);
         Console.Write("      ");
         Console.BackgroundColor = initialBackgroundColor;
         Console.WriteLine();
         Console.WriteLine();
     }
 
-    static ConsoleColor getColor(int i)
+    static ConsoleColor GetColor(int i)
     {
         switch (i)
         {
@@ -386,20 +586,6 @@ internal class Program
 //  \_\_\/\/
 //   \_\_\/
 //  
-//         _____ _____
-//       /     /     /\
-//      /  W  /  W  /  \
-//     /_____/_____/    \
-//    / __  /     /\    /\
-//   / /_/ /  W  /  \  /  \
-//  /_____/_____/ /\ \/    \
-//  \  __ \     \ \/ /\    /
-//   \ \_\ \     \  /  \  /
-//    \_____\_____\/    \/
-//     \     \     \    /
-//      \     \     \  /
-//       \_____\_____\/
-//
 //         ______ ______
 //       /      /      /\
 //      /      /      /  \

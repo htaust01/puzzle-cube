@@ -9,7 +9,6 @@ public class BaseCubeTests
     public void BaseCube_Constructs_Proper_Cube()
     {
         // Arrange
-        BaseCube cube = new BaseCube(1);
         int[,] expectedUp = { { 1 } };
         int[,] expectedDown = { { 6 } };
         int[,] expectedRight = { { 2 } };
@@ -18,7 +17,7 @@ public class BaseCubeTests
         int[,] expectedBack = { { 4 } };
 
         // Act
-
+        BaseCube cube = new BaseCube(1);
 
         // Assert
         Assert.AreEqual(expectedUp[0, 0], cube.Up[0, 0]);
@@ -34,13 +33,12 @@ public class BaseCubeTests
     {
         // Arrange
         BaseCube cube = new BaseCube(2);
-        bool expected = true;
 
         // Act
         bool result = cube.IsSolved();
 
         // Assert
-        Assert.AreEqual(expected, result);
+        Assert.IsTrue(result);
     }
 
     [TestMethod]
@@ -49,12 +47,11 @@ public class BaseCubeTests
         // Arrange
         BaseCube cube = new BaseCube(2);
         cube.Up = new int[,] { { 1, 2}, { 3, 4} };
-        bool expected = false;
 
         // Act
         bool result = cube.IsSolved();
 
         // Assert
-        Assert.AreEqual(expected, result);
+        Assert.IsFalse(result);
     }
 }

@@ -142,13 +142,12 @@ public class TwoDimensionalArrayExtensionMethodTests
     {
         // Arrange
         int[,] arr = new int[2, 2] { { 1, 1}, { 1, 1} };
-        bool expected = true;
 
         // Act
         bool result = arr.AllCellsEqual();
 
         //Assert
-        Assert.AreEqual(expected, result);
+        Assert.IsTrue(result);
     }
 
     [TestMethod]
@@ -156,12 +155,11 @@ public class TwoDimensionalArrayExtensionMethodTests
     {
         // Arrange
         int[,] arr = new int[2, 2] { { 1, 1 }, { 1, 2 } };
-        bool expected = false;
 
         // Act
         bool result = arr.AllCellsEqual();
 
         //Assert
-        Assert.AreEqual(expected, result);
+        Assert.IsFalse(result);
     }
 }
