@@ -85,160 +85,119 @@ namespace PuzzleCube
             return true;
         }
 
-        public void Display5Faces()
-        {
-            ConsoleColor initialBackgroundColor = Console.BackgroundColor;
-            int[,] face;
-            int[] blanks = new int[] { 0, 2, 6, 8 };
-            int[,] blankFace = new int[SideLength, SideLength];
-            for(int i = 0; i < 9; i++)
-            {
-                switch (i)
-                {
-                    case 1:
-                        face = Up;
-                        break;
-                    case 3:
-                        face = Left;
-                        break;
-                    case 4:
-                        face = Front;
-                        break;
-                    case 5:
-                        face = Right;
-                        break;
-                    case 7:
-                        face = Down;
-                        break;
-                    default:
-                        break;
-                }
-                for(int j = 0; j < 3; j++)
-                {
+        //public void TwistU()
+        //{
+        //    int temp = Up[0, 0];
+        //    Up[0, 0] = Up[1, 0];
+        //    Up[1, 0] = Up[1, 1];
+        //    Up[1, 1] = Up[0, 1];
+        //    Up[0, 1] = temp;
+        //    temp = Front[0, 0];
+        //    int temp2 = Front[0, 1];
+        //    Front[0, 0] = Right[0, 0];
+        //    Front[0, 1] = Right[0, 1];
+        //    Right[0, 0] = Back[0, 0];
+        //    Right[0, 1] = Back[0, 1];
+        //    Back[0, 0] = Left[0, 0];
+        //    Back[0, 1] = Left[0, 1];
+        //    Left[0, 0] = temp;
+        //    Left[0, 1] = temp2;
+        //}
 
-                    Console.Write("      ");
-                }
-            }
-        }
+        //public void TwistD()
+        //{
+        //    int temp = Down[0, 0];
+        //    Down[0, 0] = Down[1, 0];
+        //    Down[1, 0] = Down[1, 1];
+        //    Down[1, 1] = Down[0, 1];
+        //    Down[0, 1] = temp;
+        //    temp = Front[1, 0];
+        //    int temp2 = Front[1, 1];
+        //    Front[1, 0] = Left[1, 0];
+        //    Front[1, 1] = Left[1, 1];
+        //    Left[1, 0] = Back[1, 0];
+        //    Left[1, 1] = Back[1, 1];
+        //    Back[1, 0] = Right[1, 0];
+        //    Back[1, 1] = Right[1, 1];
+        //    Right[1, 0] = temp;
+        //    Right[1, 1] = temp2;
+        //}
 
-        public void Display3D()
-        {
+        //public void TwistR()
+        //{
+        //    int temp = Right[0, 0];
+        //    Right[0, 0] = Right[1, 0];
+        //    Right[1, 0] = Right[1, 1];
+        //    Right[1, 1] = Right[0, 1];
+        //    Right[0, 1] = temp;
+        //    temp = Front[0, 1];
+        //    int temp2 = Front[1, 1];
+        //    Front[0, 1] = Down[0, 1];
+        //    Front[1, 1] = Down[1, 1];
+        //    Down[0, 1] = Back[1, 0];
+        //    Down[1, 1] = Back[0, 0];
+        //    Back[1, 0] = Up[0, 1];
+        //    Back[0, 0] = Up[1, 1];
+        //    Up[0, 1] = temp;
+        //    Up[1, 1] = temp2;
+        //}
 
-        }
+        //public void TwistL()
+        //{
+        //    int temp = Left[0, 0];
+        //    Left[0, 0] = Left[1, 0];
+        //    Left[1, 0] = Left[1, 1];
+        //    Left[1, 1] = Left[0, 1];
+        //    Left[0, 1] = temp;
+        //    temp = Front[0, 0];
+        //    int temp2 = Front[1, 0];
+        //    Front[0, 0] = Up[0, 0];
+        //    Front[1, 0] = Up[1, 0];
+        //    Up[0, 0] = Back[1, 1];
+        //    Up[1, 0] = Back[0, 1];
+        //    Back[1, 1] = Down[0, 0];
+        //    Back[0, 1] = Down[1, 0];
+        //    Down[0, 0] = temp;
+        //    Down[1, 0] = temp2;
+        //}
 
-        public void TwistU()
-        {
-            int temp = Up[0, 0];
-            Up[0, 0] = Up[1, 0];
-            Up[1, 0] = Up[1, 1];
-            Up[1, 1] = Up[0, 1];
-            Up[0, 1] = temp;
-            temp = Front[0, 0];
-            int temp2 = Front[0, 1];
-            Front[0, 0] = Right[0, 0];
-            Front[0, 1] = Right[0, 1];
-            Right[0, 0] = Back[0, 0];
-            Right[0, 1] = Back[0, 1];
-            Back[0, 0] = Left[0, 0];
-            Back[0, 1] = Left[0, 1];
-            Left[0, 0] = temp;
-            Left[0, 1] = temp2;
-        }
+        //public void TwistF()
+        //{
+        //    int temp = Front[0, 0];
+        //    Front[0, 0] = Front[1, 0];
+        //    Front[1, 0] = Front[1, 1];
+        //    Front[1, 1] = Front[0, 1];
+        //    Front[0, 1] = temp;
+        //    temp = Up[1, 0];
+        //    int temp2 = Up[1, 1];
+        //    Up[1, 0] = Left[1, 1];
+        //    Up[1, 1] = Left[0, 1];
+        //    Left[1, 1] = Down[0, 1];
+        //    Left[0, 1] = Down[0, 0];
+        //    Down[0, 1] = Right[0, 0];
+        //    Down[0, 0] = Right[1, 0];
+        //    Right[0, 0] = temp;
+        //    Right[1, 0] = temp2;
+        //}
 
-        public void TwistD()
-        {
-            int temp = Down[0, 0];
-            Down[0, 0] = Down[1, 0];
-            Down[1, 0] = Down[1, 1];
-            Down[1, 1] = Down[0, 1];
-            Down[0, 1] = temp;
-            temp = Front[1, 0];
-            int temp2 = Front[1, 1];
-            Front[1, 0] = Left[1, 0];
-            Front[1, 1] = Left[1, 1];
-            Left[1, 0] = Back[1, 0];
-            Left[1, 1] = Back[1, 1];
-            Back[1, 0] = Right[1, 0];
-            Back[1, 1] = Right[1, 1];
-            Right[1, 0] = temp;
-            Right[1, 1] = temp2;
-        }
-
-        public void TwistR()
-        {
-            int temp = Right[0, 0];
-            Right[0, 0] = Right[1, 0];
-            Right[1, 0] = Right[1, 1];
-            Right[1, 1] = Right[0, 1];
-            Right[0, 1] = temp;
-            temp = Front[0, 1];
-            int temp2 = Front[1, 1];
-            Front[0, 1] = Down[0, 1];
-            Front[1, 1] = Down[1, 1];
-            Down[0, 1] = Back[1, 0];
-            Down[1, 1] = Back[0, 0];
-            Back[1, 0] = Up[0, 1];
-            Back[0, 0] = Up[1, 1];
-            Up[0, 1] = temp;
-            Up[1, 1] = temp2;
-        }
-
-        public void TwistL()
-        {
-            int temp = Left[0, 0];
-            Left[0, 0] = Left[1, 0];
-            Left[1, 0] = Left[1, 1];
-            Left[1, 1] = Left[0, 1];
-            Left[0, 1] = temp;
-            temp = Front[0, 0];
-            int temp2 = Front[1, 0];
-            Front[0, 0] = Up[0, 0];
-            Front[1, 0] = Up[1, 0];
-            Up[0, 0] = Back[1, 1];
-            Up[1, 0] = Back[0, 1];
-            Back[1, 1] = Down[0, 0];
-            Back[0, 1] = Down[1, 0];
-            Down[0, 0] = temp;
-            Down[1, 0] = temp2;
-        }
-
-        public void TwistF()
-        {
-            int temp = Front[0, 0];
-            Front[0, 0] = Front[1, 0];
-            Front[1, 0] = Front[1, 1];
-            Front[1, 1] = Front[0, 1];
-            Front[0, 1] = temp;
-            temp = Up[1, 0];
-            int temp2 = Up[1, 1];
-            Up[1, 0] = Left[1, 1];
-            Up[1, 1] = Left[0, 1];
-            Left[1, 1] = Down[0, 1];
-            Left[0, 1] = Down[0, 0];
-            Down[0, 1] = Right[0, 0];
-            Down[0, 0] = Right[1, 0];
-            Right[0, 0] = temp;
-            Right[1, 0] = temp2;
-        }
-
-        public void TwistB()
-        {
-            int temp = Back[0, 0];
-            Back[0, 0] = Back[1, 0];
-            Back[1, 0] = Back[1, 1];
-            Back[1, 1] = Back[0, 1];
-            Back[0, 1] = temp;
-            temp = Up[0, 0];
-            int temp2 = Up[0, 1];
-            Up[0, 0] = Right[0, 1];
-            Up[0, 1] = Right[1, 1];
-            Right[0, 1] = Down[1, 1];
-            Right[1, 1] = Down[1, 0];
-            Down[1, 1] = Left[1, 0];
-            Down[1, 0] = Left[0, 0];
-            Left[1, 0] = temp;
-            Left[0, 0] = temp2;
-        }
+        //public void TwistB()
+        //{
+        //    int temp = Back[0, 0];
+        //    Back[0, 0] = Back[1, 0];
+        //    Back[1, 0] = Back[1, 1];
+        //    Back[1, 1] = Back[0, 1];
+        //    Back[0, 1] = temp;
+        //    temp = Up[0, 0];
+        //    int temp2 = Up[0, 1];
+        //    Up[0, 0] = Right[0, 1];
+        //    Up[0, 1] = Right[1, 1];
+        //    Right[0, 1] = Down[1, 1];
+        //    Right[1, 1] = Down[1, 0];
+        //    Down[1, 1] = Left[1, 0];
+        //    Down[1, 0] = Left[0, 0];
+        //    Left[1, 0] = temp;
+        //    Left[0, 0] = temp2;
+        //}
     }
 }
 
