@@ -8,7 +8,7 @@ internal class Program
 
     private static void Main(string[] args)
     {
-        Cube2 cube = new Cube2(4);
+        Cube2 cube = new Cube2(3);
         bool viewAs3DCube = true;
         Console.WriteLine("Welcome to Puzzle Cube!!!");
         Console.WriteLine();
@@ -114,7 +114,6 @@ internal class Program
         }
     }
 
-    // Display2D helper function
     static void PrintFaceRow(int[,] face, int row)
     {
         for(int column = 0; column < face.GetLength(1); column++)
@@ -150,7 +149,6 @@ internal class Program
                 if ((line - 2) % 4 == 0)
                     Console.Write("  ");
             }
-
             PrintRightFace(cube, line);
             Console.WriteLine();
         }
@@ -160,7 +158,6 @@ internal class Program
     static void PrintSpaces(int line, int totalLines)
     {
         Console.BackgroundColor = GetColor(0);
-        
         int numSpaces = Math.Abs(line - totalLines / 2);
         for (int i = 0; i < numSpaces; i++)
             Console.Write(" ");
@@ -175,31 +172,11 @@ internal class Program
     {
         if (line == 0 || line == (8 * cube.SideLength - 2))
             return;
-        int totalLines = cube.SideLength * 8 - 1;
-        int halfLine = totalLines / 2;
-        int absDiff = Math.Abs(halfLine - line);
-        int pointsToAdd = cube.SideLength;
-        int cellsToPrint = 0;
-        if(absDiff <= 2)
-        {
-            cellsToPrint += pointsToAdd;
-        }
-        absDiff -= 2;
-        pointsToAdd--;
-        while (absDiff >= 0)
-        {
-            if(absDiff <= 4)
-            {
-                cellsToPrint += pointsToAdd;
-            }
-            absDiff -= 4;
-            pointsToAdd--;
-        }
         List<int[]> cells = GetCells(cube.SideLength, line);
         switch(line % 4)
         {
             case 1:
-                for(int i = 0; i < cellsToPrint; i++)
+                for(int i = 0; i < cells.Count; i++)
                 {
                     Console.BackgroundColor = GetColor(cube.Right[cells[i][0], cells[i][1]]);
                     Console.Write("  ");
@@ -208,7 +185,7 @@ internal class Program
                 }
                 break;
             case 3:
-                for (int i = 0; i < cellsToPrint; i++)
+                for (int i = 0; i < cells.Count; i++)
                 {
                     Console.BackgroundColor = GetColor(cube.Right[cells[i][0], cells[i][1]]);
                     Console.Write("      ");
@@ -217,7 +194,7 @@ internal class Program
                 }
                 break;
             default:
-                for(int i = 0; i < cellsToPrint; i++)
+                for(int i = 0; i < cells.Count; i++)
                 {
                     Console.BackgroundColor = GetColor(cube.Right[cells[i][0], cells[i][1]]);
                     Console.Write("    ");
@@ -241,84 +218,56 @@ internal class Program
             cells.Add(new int[] { SideLength - 1, 0 });
             return cells;
         }
-        int diagonal = (line - 2) / 4 + 1;
         if(line % 4 == 1)
         {
-            // use same algorithm as below to make two lists then weave lists together
-            List<int[]> cells1 = new List<int[]>();
-            int numOfCells = SideLength - Math.Abs(SideLength - diagonal);
-            for (int i = 0; i < numOfCells; i++)
-            {
-                int[] cell = new int[2];
-                if (diagonal <= SideLength)
-                {
-                    cell[0] = i;
-                    cell[1] = SideLength - diagonal + i;
-                }
-                else
-                {
-                    cell[0] = diagonal - SideLength + i;
-                    cell[1] = i;
-                }
-                cells1.Add(cell);
-            }
-            diagonal++;
-            List<int[]> cells2 = new List<int[]>();
-            numOfCells = SideLength - Math.Abs(SideLength - diagonal);
-            for (int i = 0; i < numOfCells; i++)
-            {
-                int[] cell = new int[2];
-                if (diagonal <= SideLength)
-                {
-                    cell[0] = i;
-                    cell[1] = SideLength - diagonal + i;
-                }
-                else
-                {
-                    cell[0] = diagonal - SideLength + i;
-                    cell[1] = i;
-                }
-                cells2.Add(cell);
-            }
-            if(cells1.Count > cells2.Count)
-            {
-                for(int j = 0; j < cells2.Count; j++)
-                {
-                    cells.Add(cells1[j]);
-                    cells.Add(cells2[j]);
-                }
-                cells.Add(cells1[cells1.Count - 1]);
-            }
-            else
-            {
-                for (int j = 0; j < cells1.Count; j++)
-                {
-                    cells.Add(cells2[j]);
-                    cells.Add(cells1[j]);
-                }
-                cells.Add(cells2[cells2.Count - 1]);
-            }
+            cells = WeaveLists(GetDiagonalCells(SideLength, line), GetDiagonalCells(SideLength, line + 1));
         }
         else
         {
-            int numOfCells = SideLength - Math.Abs(SideLength - diagonal);
-            for(int i = 0; i < numOfCells; i++)
-            {
-                int[] cell = new int[2];
-                if (diagonal <= SideLength)
-                {
-                    cell[0] = i;
-                    cell[1] = SideLength - diagonal + i;
-                }
-                else
-                {
-                    cell[0] = diagonal - SideLength + i;
-                    cell[1] = i;
-                }
-                cells.Add(cell);
-            }
+            cells = GetDiagonalCells(SideLength, line);
         }
         return cells;
+    }
+
+    static List<int[]> GetDiagonalCells(int SideLength, int line)
+    {
+        List<int[]> cells = new List<int[]>();
+        int diagonal = (line - 2) / 4 + 1;
+        int numOfCells = SideLength - Math.Abs(SideLength - diagonal);
+        for (int i = 0; i < numOfCells; i++)
+        {
+            int[] cell = new int[2];
+            if (diagonal <= SideLength)
+            {
+                cell[0] = i;
+                cell[1] = SideLength - diagonal + i;
+            }
+            else
+            {
+                cell[0] = diagonal - SideLength + i;
+                cell[1] = i;
+            }
+            cells.Add(cell);
+        }
+        return cells;
+    }
+
+    static List<int[]> WeaveLists(List<int[]> list1, List<int[]> list2)
+    {
+        List<int[]> wovenList = new List<int[]>();
+        if(list1.Count < list2.Count)
+        {
+            var temp = list1;
+            list1 = list2;
+            list2 = temp;
+        }
+        for (int j = 0; j < list2.Count; j++)
+        {
+            wovenList.Add(list1[j]);
+            wovenList.Add(list2[j]);
+        }
+        wovenList.Add(list1[list1.Count - 1]);
+        return wovenList;
     }
 
     static ConsoleColor GetColor(int i)
@@ -349,7 +298,6 @@ internal class Program
 //  /_/_/\/\
 //  \_\_\/\/
 //   \_\_\/
-//  
 //         ______ ______
 //       /      /      /\
 //      /      /      /  \
@@ -363,7 +311,6 @@ internal class Program
 //     \      \      \    /
 //      \      \      \  /
 //       \______\______\/
-//
 //            ______ ______ ______
 //          /      /      /      /\
 //         /      /      /      /  \
@@ -383,4 +330,3 @@ internal class Program
 //        \      \      \      \    /
 //         \      \      \      \  /
 //          \______\______\______\/
-//
