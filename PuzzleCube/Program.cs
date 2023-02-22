@@ -8,13 +8,27 @@ internal class Program
 
     private static void Main(string[] args)
     {
-        Cube2 cube = new Cube2(3);
-        bool viewAs3DCube = true;
         Console.WriteLine("Welcome to Puzzle Cube!!!");
         Console.WriteLine();
         Console.WriteLine("Press Enter to Play");
         Console.ReadLine();
         Console.Clear();
+        string[] possibleCubeSizes = { "2", "3" };
+        string cubeSize;
+        do
+        {
+            Console.WriteLine("Enter '2' if you would like to play with a 2x2x2 cube");
+            Console.WriteLine("Or Enter '3' if you would like to play with a 3x3x3 cube");
+            Console.Write("Command: ");
+            cubeSize = Console.ReadLine();
+            if (!possibleCubeSizes.Contains(cubeSize))
+                Console.WriteLine("You have entered an invalid size");
+        } while (!possibleCubeSizes.Contains(cubeSize));
+        Console.Clear();
+        Cube2 cube = new Cube2(int.Parse(cubeSize));
+        bool viewAs3DCube = true;
+        bool cheatMode = false;
+        cube.RandomizeCube();
         Display3D(cube);
         Console.WriteLine("Enter 'X', 'Y', or 'Z' to rotate the cube clockwise around that axis");
         Console.WriteLine("Enter 'U', 'D', 'R', 'L', 'F', or 'B' to twist that face of the cube clockwise");
@@ -57,6 +71,13 @@ internal class Program
                 case "v":
                     viewAs3DCube = !viewAs3DCube;
                     break;
+                case "cheat":
+                    cheatMode = !cheatMode;
+                    if (cheatMode)
+                        Console.WriteLine("Cheat Mode Activated");
+                    else
+                        Console.WriteLine("Cheat Mode Deactivated");
+                    break;
                 default:
                     Console.WriteLine("Invalid Command");
                     break;
@@ -66,6 +87,11 @@ internal class Program
             else
                 Display2D(cube);
             Console.WriteLine();
+            if(cheatMode)
+            {
+                cube.PrintPreviousMoves();
+                Console.WriteLine();
+            }
             if(cube.IsSolved())
             {
                 Console.WriteLine("You have solved the Cube!");

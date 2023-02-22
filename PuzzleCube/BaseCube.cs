@@ -11,6 +11,7 @@ namespace PuzzleCube
         public int[,] Left { get; set; }
         public int[,] Front { get; set; }
         public int[,] Back { get; set; }
+        public List<string> PreviousMoves { get; set; }
 
         public BaseCube(int sideLength)
 		{
@@ -27,6 +28,7 @@ namespace PuzzleCube
             this.Front.Fill2DArray(3);
             this.Back = new int[sideLength, sideLength];
             this.Back.Fill2DArray(4);
+            this.PreviousMoves = new List<string>();
         }
 
         public void RotateX()
@@ -40,6 +42,7 @@ namespace PuzzleCube
             Down.Rotate2DArray(2);
             Right.Rotate2DArray(1);
             Left.Rotate2DArray(3);
+            this.UpdatePreviousMoves("X");
         }
 
         public void RotateY()
@@ -51,6 +54,7 @@ namespace PuzzleCube
             Left = temp;
             Up.Rotate2DArray(1);
             Down.Rotate2DArray(3);
+            this.UpdatePreviousMoves("Y");
         }
 
         public void RotateZ()
@@ -66,6 +70,7 @@ namespace PuzzleCube
             Right.Rotate2DArray(1);
             Front.Rotate2DArray(1);
             Back.Rotate2DArray(3);
+            this.UpdatePreviousMoves("Z");
         }
 
         public bool IsSolved()
@@ -85,119 +90,26 @@ namespace PuzzleCube
             return true;
         }
 
-        //public void TwistU()
-        //{
-        //    int temp = Up[0, 0];
-        //    Up[0, 0] = Up[1, 0];
-        //    Up[1, 0] = Up[1, 1];
-        //    Up[1, 1] = Up[0, 1];
-        //    Up[0, 1] = temp;
-        //    temp = Front[0, 0];
-        //    int temp2 = Front[0, 1];
-        //    Front[0, 0] = Right[0, 0];
-        //    Front[0, 1] = Right[0, 1];
-        //    Right[0, 0] = Back[0, 0];
-        //    Right[0, 1] = Back[0, 1];
-        //    Back[0, 0] = Left[0, 0];
-        //    Back[0, 1] = Left[0, 1];
-        //    Left[0, 0] = temp;
-        //    Left[0, 1] = temp2;
-        //}
-
-        //public void TwistD()
-        //{
-        //    int temp = Down[0, 0];
-        //    Down[0, 0] = Down[1, 0];
-        //    Down[1, 0] = Down[1, 1];
-        //    Down[1, 1] = Down[0, 1];
-        //    Down[0, 1] = temp;
-        //    temp = Front[1, 0];
-        //    int temp2 = Front[1, 1];
-        //    Front[1, 0] = Left[1, 0];
-        //    Front[1, 1] = Left[1, 1];
-        //    Left[1, 0] = Back[1, 0];
-        //    Left[1, 1] = Back[1, 1];
-        //    Back[1, 0] = Right[1, 0];
-        //    Back[1, 1] = Right[1, 1];
-        //    Right[1, 0] = temp;
-        //    Right[1, 1] = temp2;
-        //}
-
-        //public void TwistR()
-        //{
-        //    int temp = Right[0, 0];
-        //    Right[0, 0] = Right[1, 0];
-        //    Right[1, 0] = Right[1, 1];
-        //    Right[1, 1] = Right[0, 1];
-        //    Right[0, 1] = temp;
-        //    temp = Front[0, 1];
-        //    int temp2 = Front[1, 1];
-        //    Front[0, 1] = Down[0, 1];
-        //    Front[1, 1] = Down[1, 1];
-        //    Down[0, 1] = Back[1, 0];
-        //    Down[1, 1] = Back[0, 0];
-        //    Back[1, 0] = Up[0, 1];
-        //    Back[0, 0] = Up[1, 1];
-        //    Up[0, 1] = temp;
-        //    Up[1, 1] = temp2;
-        //}
-
-        //public void TwistL()
-        //{
-        //    int temp = Left[0, 0];
-        //    Left[0, 0] = Left[1, 0];
-        //    Left[1, 0] = Left[1, 1];
-        //    Left[1, 1] = Left[0, 1];
-        //    Left[0, 1] = temp;
-        //    temp = Front[0, 0];
-        //    int temp2 = Front[1, 0];
-        //    Front[0, 0] = Up[0, 0];
-        //    Front[1, 0] = Up[1, 0];
-        //    Up[0, 0] = Back[1, 1];
-        //    Up[1, 0] = Back[0, 1];
-        //    Back[1, 1] = Down[0, 0];
-        //    Back[0, 1] = Down[1, 0];
-        //    Down[0, 0] = temp;
-        //    Down[1, 0] = temp2;
-        //}
-
-        //public void TwistF()
-        //{
-        //    int temp = Front[0, 0];
-        //    Front[0, 0] = Front[1, 0];
-        //    Front[1, 0] = Front[1, 1];
-        //    Front[1, 1] = Front[0, 1];
-        //    Front[0, 1] = temp;
-        //    temp = Up[1, 0];
-        //    int temp2 = Up[1, 1];
-        //    Up[1, 0] = Left[1, 1];
-        //    Up[1, 1] = Left[0, 1];
-        //    Left[1, 1] = Down[0, 1];
-        //    Left[0, 1] = Down[0, 0];
-        //    Down[0, 1] = Right[0, 0];
-        //    Down[0, 0] = Right[1, 0];
-        //    Right[0, 0] = temp;
-        //    Right[1, 0] = temp2;
-        //}
-
-        //public void TwistB()
-        //{
-        //    int temp = Back[0, 0];
-        //    Back[0, 0] = Back[1, 0];
-        //    Back[1, 0] = Back[1, 1];
-        //    Back[1, 1] = Back[0, 1];
-        //    Back[0, 1] = temp;
-        //    temp = Up[0, 0];
-        //    int temp2 = Up[0, 1];
-        //    Up[0, 0] = Right[0, 1];
-        //    Up[0, 1] = Right[1, 1];
-        //    Right[0, 1] = Down[1, 1];
-        //    Right[1, 1] = Down[1, 0];
-        //    Down[1, 1] = Left[1, 0];
-        //    Down[1, 0] = Left[0, 0];
-        //    Left[1, 0] = temp;
-        //    Left[0, 0] = temp2;
-        //}
+        public void UpdatePreviousMoves(string move)
+        {
+            if(this.IsSolved())
+            {
+                this.PreviousMoves.Clear();
+                return;
+            }
+            int numMoves = this.PreviousMoves.Count;
+            if (numMoves >= 3
+                && move == this.PreviousMoves[numMoves - 1]
+                && move == this.PreviousMoves[numMoves - 2]
+                && move == this.PreviousMoves[numMoves - 3])
+            {
+                this.PreviousMoves.RemoveAt(numMoves - 1);
+                this.PreviousMoves.RemoveAt(numMoves - 2);
+                this.PreviousMoves.RemoveAt(numMoves - 3);
+            }
+            else
+                this.PreviousMoves.Add(move);
+        }
     }
 }
 
