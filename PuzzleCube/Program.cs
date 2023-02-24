@@ -35,51 +35,55 @@ internal class Program
         Console.WriteLine("Enter 'exit' to stop playing.");
         Console.Write("Command: ");
         string input = Console.ReadLine();
-        input = input.ToLower();
-        while(input != "exit")
+        input = input.ToUpper();
+        while(input != "EXIT")
         {
             Console.Clear();
             switch(input)
             {
-                case "x":
+                case "X":
                     cube.RotateX();
                     break;
-                case "y":
+                case "Y":
                     cube.RotateY();
                     break;
-                case "z":
+                case "Z":
                     cube.RotateZ();
                     break;
-                case "u":
+                case "U":
                     cube.TwistU();
                     break;
-                case "d":
+                case "D":
                     cube.TwistD();
                     break;
-                case "r":
+                case "R":
                     cube.TwistR();
                     break;
-                case "l":
+                case "L":
                     cube.TwistL();
                     break;
-                case "f":
+                case "F":
                     cube.TwistF();
                     break;
-                case "b":
+                case "B":
                     cube.TwistB();
                     break;
-                case "v":
+                case "V":
                     viewAs3DCube = !viewAs3DCube;
                     break;
-                case "cheat":
+                case "UUDDLRLRBASTART":
                     cheatMode = !cheatMode;
                     if (cheatMode)
                         Console.WriteLine("Cheat Mode Activated");
                     else
                         Console.WriteLine("Cheat Mode Deactivated");
+                    Console.WriteLine();
                     break;
                 default:
-                    Console.WriteLine("Invalid Command");
+                    if (cube.IsValidSequence(input))
+                        cube.ProcessSequence(input);
+                    else
+                        Console.WriteLine("Invalid Command");
                     break;
             }
             if (viewAs3DCube)
@@ -102,7 +106,7 @@ internal class Program
             Console.WriteLine("Enter 'exit' to stop playing.");
             Console.Write("Command: ");
             input = Console.ReadLine();
-            input = input.ToLower();
+            input = input.ToUpper();
         }
     }
 
@@ -164,7 +168,7 @@ internal class Program
                 else if (line > totalLines / 2)
                     PrintFaceRow(cube.Front, (line - 4 * cube.SideLength) / 4);
             }
-            // Adjust Spaces for some rows
+            // Adjust Spaces for the rows where the right face is printing the second length 4 section of a cell
             if(line < totalLines / 2)
             {
                 if(line % 4 == 0)

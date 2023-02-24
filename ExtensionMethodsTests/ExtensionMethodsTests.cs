@@ -21,6 +21,21 @@ public class TwoDimensionalArrayExtensionMethodTests
     }
 
     [TestMethod]
+    public void GetReverseRow_Returns_Correct_Row_Reversed()
+    {
+        // Arrange
+        int[,] arr = new int[,] { { 1, 2 }, { 3, 4 } };
+        int[] expected = new int[] { 4, 3 };
+
+        // Act
+        int[] result = arr.GetReverseRow(1);
+
+        // Assert
+        Assert.AreEqual(expected[0], result[0]);
+        Assert.AreEqual(expected[1], result[1]);
+    }
+
+    [TestMethod]
     public void GetColumn_Returns_Correct_Column()
     {
         // Arrange
@@ -29,6 +44,21 @@ public class TwoDimensionalArrayExtensionMethodTests
 
         // Act
         int[] result = arr.GetColumn(1);
+
+        // Assert
+        Assert.AreEqual(expected[0], result[0]);
+        Assert.AreEqual(expected[1], result[1]);
+    }
+
+    [TestMethod]
+    public void GetColumn_Returns_Correct_Column_Reversed()
+    {
+        // Arrange
+        int[,] arr = new int[,] { { 1, 2 }, { 3, 4 } };
+        int[] expected = new int[] { 4, 2 };
+
+        // Act
+        int[] result = arr.GetReverseColumn(1);
 
         // Assert
         Assert.AreEqual(expected[0], result[0]);

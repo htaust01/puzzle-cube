@@ -17,14 +17,28 @@ namespace PuzzleCube
 			return row;
 		}
 
+        /// <summary>
+        /// Returns the reversed row at rowIndex of the 2d array as an array
+        /// </summary>
+        /// <param name="arr"></param>
+        /// <param name="rowIndex"></param>
+        /// <returns></returns>
+        public static int[] GetReverseRow(this int[,] arr, int rowIndex)
+        {
+            int[] row = new int[arr.GetLength(0)];
+            for (int column = 0; column < arr.GetLength(0); column++)
+                row[column] = arr[rowIndex, column];
+			Array.Reverse(row);
+            return row;
+        }
 
-		/// <summary>
-		/// Returns the column at columnIndex of the 2d array as an array
-		/// </summary>
-		/// <param name="arr"></param>
-		/// <param name="columnIndex"></param>
-		/// <returns></returns>
-		public static int[] GetColumn(this int[,] arr, int columnIndex)
+        /// <summary>
+        /// Returns the column at columnIndex of the 2d array as an array
+        /// </summary>
+        /// <param name="arr"></param>
+        /// <param name="columnIndex"></param>
+        /// <returns></returns>
+        public static int[] GetColumn(this int[,] arr, int columnIndex)
 		{
 			int[] column = new int[arr.GetLength(1)];
 			for (int row = 0; row < arr.GetLength(1); row++)
@@ -32,13 +46,28 @@ namespace PuzzleCube
 			return column;
 		}
 
-		/// <summary>
-		/// Assigns arrayToAssign to the column at columnIndex of the 2d array
-		/// </summary>
-		/// <param name="arr"></param>
-		/// <param name="columnIndex"></param>
-		/// <param name="arrayToAssign"></param>
-		public static void AssignArrayToColumn(this int[,] arr, int columnIndex, int[] arrayToAssign)
+        /// <summary>
+        /// Returns the reversed column at columnIndex of the 2d array as an array
+        /// </summary>
+        /// <param name="arr"></param>
+        /// <param name="columnIndex"></param>
+        /// <returns></returns>
+        public static int[] GetReverseColumn(this int[,] arr, int columnIndex)
+        {
+            int[] column = new int[arr.GetLength(1)];
+            for (int row = 0; row < arr.GetLength(1); row++)
+                column[row] = arr[row, columnIndex];
+			Array.Reverse(column);
+            return column;
+        }
+
+        /// <summary>
+        /// Assigns arrayToAssign to the column at columnIndex of the 2d array
+        /// </summary>
+        /// <param name="arr"></param>
+        /// <param name="columnIndex"></param>
+        /// <param name="arrayToAssign"></param>
+        public static void AssignArrayToColumn(this int[,] arr, int columnIndex, int[] arrayToAssign)
 		{
 			for (int row = 0; row < arr.GetLength(0); row++)
 				arr[row, columnIndex] = arrayToAssign[row];

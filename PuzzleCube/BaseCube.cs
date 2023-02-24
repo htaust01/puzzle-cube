@@ -11,6 +11,8 @@ namespace PuzzleCube
         public int[,] Left { get; set; }
         public int[,] Front { get; set; }
         public int[,] Back { get; set; }
+
+        public List<string> PossibleMoves { get; set; }
         public List<string> PreviousMoves { get; set; }
 
         public BaseCube(int sideLength)
@@ -28,6 +30,7 @@ namespace PuzzleCube
             this.Front.Fill2DArray(3);
             this.Back = new int[sideLength, sideLength];
             this.Back.Fill2DArray(4);
+            this.PossibleMoves = new List<string> { "X", "Y", "Z" };
             this.PreviousMoves = new List<string>();
         }
 
@@ -109,6 +112,37 @@ namespace PuzzleCube
             }
             else
                 this.PreviousMoves.Add(move);
+        }
+
+        public bool IsValidSequence(string sequence)
+        {
+            for (int index = 0; index < sequence.Length; index++)
+            {
+                if (!this.PossibleMoves.Contains(sequence[index].ToString()))
+                    return false;
+            }
+            return true;
+        }
+
+        public virtual void ProcessSequence(string sequence)
+        {
+            for (int index = 0; index < sequence.Length; index++)
+            {
+                switch (sequence[index].ToString())
+                {
+                    case "X":
+                        this.RotateX();
+                        break;
+                    case "Y":
+                        this.RotateY();
+                        break;
+                    case "Z":
+                        this.RotateZ();
+                        break;
+                    default:
+                        throw new Exception("ERROR: Unkown Move");
+                }
+            }
         }
     }
 }
