@@ -8,66 +8,21 @@ internal class Program
 
     private static void Main(string[] args)
     {
-        Console.WriteLine("Welcome to Puzzle Cube!!!");
-        Console.WriteLine();
-        Console.WriteLine("Press Enter to Play");
-        Console.ReadLine();
+        Banner();
+        int cubeSize = GetCubeSize();
+        TwistableCube cube = new TwistableCube(cubeSize);
+        cube.RandomizeCube();
         Console.Clear();
-        string[] possibleCubeSizes = { "2", "3" };
-        string cubeSize;
-        do
-        {
-            Console.WriteLine("Enter '2' if you would like to play with a 2x2x2 cube");
-            Console.WriteLine("Or Enter '3' if you would like to play with a 3x3x3 cube");
-            Console.Write("Command: ");
-            cubeSize = Console.ReadLine();
-            if (!possibleCubeSizes.Contains(cubeSize))
-                Console.WriteLine("You have entered an invalid size");
-        } while (!possibleCubeSizes.Contains(cubeSize));
-        Console.Clear();
-        Cube2 cube = new Cube2(int.Parse(cubeSize));
+        Display3D(cube);
         bool viewAs3DCube = true;
         bool cheatMode = false;
-        cube.RandomizeCube();
-        Display3D(cube);
-        Console.WriteLine("Enter 'X', 'Y', or 'Z' to rotate the cube clockwise around that axis");
-        Console.WriteLine("Enter 'U', 'D', 'R', 'L', 'F', or 'B' to twist that face of the cube clockwise");
-        Console.WriteLine("Enter 'exit' to stop playing.");
-        Console.Write("Command: ");
-        string input = Console.ReadLine();
-        input = input.ToUpper();
-        while(input != "EXIT")
+        string command;
+        do
         {
+            command = GetCommand();
             Console.Clear();
-            switch(input)
+            switch (command)
             {
-                case "X":
-                    cube.RotateX();
-                    break;
-                case "Y":
-                    cube.RotateY();
-                    break;
-                case "Z":
-                    cube.RotateZ();
-                    break;
-                case "U":
-                    cube.TwistU();
-                    break;
-                case "D":
-                    cube.TwistD();
-                    break;
-                case "R":
-                    cube.TwistR();
-                    break;
-                case "L":
-                    cube.TwistL();
-                    break;
-                case "F":
-                    cube.TwistF();
-                    break;
-                case "B":
-                    cube.TwistB();
-                    break;
                 case "V":
                     viewAs3DCube = !viewAs3DCube;
                     break;
@@ -80,34 +35,86 @@ internal class Program
                     Console.WriteLine();
                     break;
                 default:
-                    if (cube.IsValidSequence(input))
-                        cube.ProcessSequence(input);
+                    if (cube.IsValidSequence(command))
+                        cube.ProcessSequence(command);
                     else
+                    {
                         Console.WriteLine("Invalid Command");
+                        Console.WriteLine();
+                    }
                     break;
             }
             if (viewAs3DCube)
                 Display3D(cube);
             else
                 Display2D(cube);
-            Console.WriteLine();
-            if(cheatMode)
-            {
+            if (cheatMode && cube.PreviousMoves.Count > 0)
                 cube.PrintPreviousMoves();
-                Console.WriteLine();
-            }
-            if(cube.IsSolved())
+            if (cube.IsSolved())
             {
                 Console.WriteLine("You have solved the Cube!");
                 Console.WriteLine();
             }
-            Console.WriteLine("Enter 'X', 'Y', or 'Z' to rotate the cube clockwise around that axis");
-            Console.WriteLine("Enter 'U', 'D', 'R', 'L', 'F', or 'B' to twist that face of the cube clockwise");
-            Console.WriteLine("Enter 'exit' to stop playing.");
-            Console.Write("Command: ");
-            input = Console.ReadLine();
-            input = input.ToUpper();
-        }
+        } while (command != "Q");
+    }
+
+    static void Banner()
+    {
+        Console.WriteLine("         Welcome to Puzzle Cube!!!");
+        Console.WriteLine();
+        Console.WriteLine("            ______ ______ ______");
+        Console.WriteLine("          /      /      /      /\\");
+        Console.WriteLine("         /      /      /      /  \\");
+        Console.WriteLine("        /______/______/______/    \\");
+        Console.WriteLine("       /      /      /      /\\    /\\");
+        Console.WriteLine("      /      /      /      /  \\  /  \\");
+        Console.WriteLine("     /______/______/______/    \\/    \\");
+        Console.WriteLine("    /      /      /      /\\    /\\    /\\");
+        Console.WriteLine("   /      /      /      /  \\  /  \\  /  \\");
+        Console.WriteLine("  /______/______/______/    \\/    \\/    \\");
+        Console.WriteLine("  \\      \\      \\      \\    /\\    /\\    /");
+        Console.WriteLine("   \\      \\      \\      \\  /  \\  /  \\  /");
+        Console.WriteLine("    \\______\\______\\______\\/    \\/    \\/");
+        Console.WriteLine("     \\      \\      \\      \\    /\\    /");
+        Console.WriteLine("      \\      \\      \\      \\  /  \\  /");
+        Console.WriteLine("       \\______\\______\\______\\/    \\/");
+        Console.WriteLine("        \\      \\      \\      \\    /");
+        Console.WriteLine("         \\      \\      \\      \\  /");
+        Console.WriteLine("          \\______\\______\\______\\/");
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.Write("           Press Enter to Play");
+        Console.ReadLine();
+    }
+
+    static int GetCubeSize()
+    {
+        string[] possibleCubeSizes = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+        string cubeSize;
+        do
+        {
+            Console.WriteLine();
+            Console.WriteLine("Enter a number between '1' and '9' to choose the size cube you would like to solve.");
+            Console.WriteLine("For example enter '3' if you would like to play with a 3x3x3 cube");
+            Console.WriteLine("Note: It is difficult to play with the larger sizes as they don't fit on the screen well");
+            Console.Write("Size: ");
+            cubeSize = Console.ReadLine()!;
+            if (!possibleCubeSizes.Contains(cubeSize))
+                Console.WriteLine("You have entered an invalid size");
+        } while (!possibleCubeSizes.Contains(cubeSize));
+        return int.Parse(cubeSize);
+    }
+
+    static string GetCommand()
+    {
+        Console.WriteLine("Enter 'X', 'Y', or 'Z' to rotate the cube clockwise around that axis");
+        Console.WriteLine("Enter 'U', 'D', 'R', 'L', 'F', or 'B' to twist that face of the cube clockwise");
+        Console.WriteLine("Followed by a number for which layer you would like to twist");
+        Console.WriteLine("Enter 'Q' to stop playing.");
+        Console.Write("Command: ");
+        string command = Console.ReadLine()!;
+        command = command.ToUpper();
+        return command;
     }
 
     static void Display2D(BaseCube cube)
@@ -130,6 +137,7 @@ internal class Program
                             PrintFaceRow(cube.Left, row);
                             PrintFaceRow(cube.Front, row);
                             PrintFaceRow(cube.Right, row);
+                            PrintFaceRow(cube.Back, row);
                             Console.WriteLine();
                             break;
                         case 2:
@@ -142,6 +150,7 @@ internal class Program
                 Console.WriteLine();
             }
         }
+        Console.WriteLine();
     }
 
     static void PrintFaceRow(int[,] face, int row)
@@ -182,6 +191,7 @@ internal class Program
             PrintRightFace(cube, line);
             Console.WriteLine();
         }
+        Console.WriteLine();
         Console.WriteLine();
     }
 
@@ -249,13 +259,9 @@ internal class Program
             return cells;
         }
         if(line % 4 == 1)
-        {
             cells = WeaveLists(GetDiagonalCells(SideLength, line), GetDiagonalCells(SideLength, line + 1));
-        }
         else
-        {
             cells = GetDiagonalCells(SideLength, line);
-        }
         return cells;
     }
 
@@ -304,59 +310,14 @@ internal class Program
     {
         switch (i)
         {
-            case 0:
-                return initialBackgroundColor;
-            case 1:
-                return ConsoleColor.White;
-            case 2:
-                return ConsoleColor.DarkBlue;
-            case 3:
-                return ConsoleColor.Red;
-            case 4:
-                return ConsoleColor.DarkMagenta;
-            case 5:
-                return ConsoleColor.DarkGreen;
-            case 6:
-                return ConsoleColor.Yellow;
-            default:
-                return ConsoleColor.Gray;
+            case 0: return initialBackgroundColor;
+            case 1: return ConsoleColor.White;
+            case 2: return ConsoleColor.DarkBlue;
+            case 3: return ConsoleColor.Red;
+            case 4: return ConsoleColor.DarkMagenta;
+            case 5: return ConsoleColor.DarkGreen;
+            case 6: return ConsoleColor.Yellow;
+            default: throw new Exception("ERROR: Color out of bounds");
         }
     }
 }
-//     _ _
-//   /_/_/\
-//  /_/_/\/\
-//  \_\_\/\/
-//   \_\_\/
-//         ______ ______
-//       /      /      /\
-//      /      /      /  \
-//     /______/______/    \
-//    /      /      /\    /\
-//   /      /      /  \  /  \
-//  /______/______/    \/    \
-//  \      \      \    /\    /
-//   \      \      \  /  \  /
-//    \______\______\/    \/
-//     \      \      \    /
-//      \      \      \  /
-//       \______\______\/
-//            ______ ______ ______
-//          /      /      /      /\
-//         /      /      /      /  \
-//        /______/______/______/    \
-//       /      /      /      /\    /\
-//      /      /      /      /  \  /  \
-//     /______/______/______/    \/    \
-//    /      /      /      /\    /\    /\
-//   /      /      /      /  \  /  \  /  \
-//  /______/______/______/    \/    \/    \
-//  \      \      \      \    /\    /\    /
-//   \      \      \      \  /  \  /  \  /
-//    \______\______\______\/    \/    \/
-//     \      \      \      \    /\    /
-//      \      \      \      \  /  \  /
-//       \______\______\______\/    \/
-//        \      \      \      \    /
-//         \      \      \      \  /
-//          \______\______\______\/

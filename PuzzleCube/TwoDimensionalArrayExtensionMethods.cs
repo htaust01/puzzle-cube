@@ -69,7 +69,9 @@ namespace PuzzleCube
         /// <param name="arrayToAssign"></param>
         public static void AssignArrayToColumn(this int[,] arr, int columnIndex, int[] arrayToAssign)
 		{
-			for (int row = 0; row < arr.GetLength(0); row++)
+            if (arr.GetLength(1) != arrayToAssign.Length)
+                throw new Exception("ERROR: The array is not the correct length for the column");
+            for (int row = 0; row < arr.GetLength(0); row++)
 				arr[row, columnIndex] = arrayToAssign[row];
 		}
 
@@ -81,17 +83,21 @@ namespace PuzzleCube
 		/// <param name="arrayToAssign"></param>
 		public static void AssignArrayToRow(this int[,] arr, int rowIndex, int[] arrayToAssign)
 		{
+			if (arr.GetLength(0) != arrayToAssign.Length)
+				throw new Exception("ERROR: The array is not the correct length for the row");
 			for (int column = 0; column < arr.GetLength(1); column++)
 				arr[rowIndex, column] = arrayToAssign[column];
 		}
 
 		/// <summary>
-		/// Rotates the 2D array arr a quarter turn clockwise quarterTurns number of times
+		/// Rotates a square 2D array arr a quarter turn clockwise quarterTurns number of times
 		/// </summary>
 		/// <param name="arr"></param>
 		/// <param name="quarterTurns"></param>
 		public static void Rotate2DArray(this int[,] arr, int quarterTurns)
 		{
+			if (arr.GetLength(0) != arr.GetLength(1))
+				throw new Exception("ERROR: The 2D array is not square");
 			int[,] newArr = new int[arr.GetLength(1), arr.GetLength(0)];
 			for(int quarterRotations = 0; quarterRotations < quarterTurns; quarterRotations++)
 			{

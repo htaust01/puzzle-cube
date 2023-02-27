@@ -116,28 +116,64 @@ namespace PuzzleCube
 
         public bool IsValidSequence(string sequence)
         {
-            for (int index = 0; index < sequence.Length; index++)
+            List<string> rotations = new List<string> { "X", "Y", "Z" };
+            List<string> numbers = new List<string> { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+            int index = 0;
+            while (index < sequence.Length)
             {
                 if (!this.PossibleMoves.Contains(sequence[index].ToString()))
+                {
                     return false;
+                }
+                index++;
+                if (index < sequence.Length)
+                {
+                    if (numbers.Contains(sequence[index].ToString()))
+                    {
+                        int number = int.Parse(sequence[index].ToString());
+                        if (rotations.Contains(sequence[index - 1].ToString()))
+                        {
+                            if (number < 1 || number > 3)
+                                return false;
+                        }
+                        else
+                        {
+                            if (number < 1 || number > this.SideLength)
+                                return false;
+                        }
+                        index++;
+                    }
+                }
             }
             return true;
         }
 
         public virtual void ProcessSequence(string sequence)
         {
-            for (int index = 0; index < sequence.Length; index++)
+            int index = 0;
+            while (index < sequence.Length)
             {
-                switch (sequence[index].ToString())
+                string move = sequence[index].ToString();
+                index++;
+                int number = 1;
+                if (index < sequence.Length)
+                {
+                    if (int.TryParse(sequence[index].ToString(), out number))
+                        index++;
+                }
+                switch (move)
                 {
                     case "X":
-                        this.RotateX();
+                        for(int times = 0; times < number; times++)
+                            this.RotateX();
                         break;
                     case "Y":
-                        this.RotateY();
+                        for (int times = 0; times < number; times++)
+                            this.RotateY();
                         break;
                     case "Z":
-                        this.RotateZ();
+                        for (int times = 0; times < number; times++)
+                            this.RotateZ();
                         break;
                     default:
                         throw new Exception("ERROR: Unkown Move");
