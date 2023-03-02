@@ -17,6 +17,8 @@ namespace PuzzleCube
 
         public BaseCube(int sideLength)
 		{
+            if (sideLength < 1)
+                throw new Exception("ERROR: sideLength can not be less than 1");
 			this.SideLength = sideLength;
             this.Up = new int[sideLength, sideLength];
             this.Up.Fill2DArray(1);
@@ -155,24 +157,24 @@ namespace PuzzleCube
             {
                 string move = sequence[index].ToString();
                 index++;
-                int number = 1;
+                int totalQuarterTurns = 1;
                 if (index < sequence.Length)
                 {
-                    if (int.TryParse(sequence[index].ToString(), out number))
+                    if (int.TryParse(sequence[index].ToString(), out totalQuarterTurns))
                         index++;
                 }
                 switch (move)
                 {
                     case "X":
-                        for(int times = 0; times < number; times++)
+                        for(int quarterTurn = 0; quarterTurn < totalQuarterTurns; quarterTurn++)
                             this.RotateX();
                         break;
                     case "Y":
-                        for (int times = 0; times < number; times++)
+                        for (int quarterTurn = 0; quarterTurn < totalQuarterTurns; quarterTurn++)
                             this.RotateY();
                         break;
                     case "Z":
-                        for (int times = 0; times < number; times++)
+                        for (int quarterTurn = 0; quarterTurn < totalQuarterTurns; quarterTurn++)
                             this.RotateZ();
                         break;
                     default:
@@ -180,6 +182,12 @@ namespace PuzzleCube
                 }
             }
         }
+
+        // Need to do research on whether a class method can return an object of said class
+        //public void SaveCubeToFile()
+        //{
+
+        //}
     }
 }
 

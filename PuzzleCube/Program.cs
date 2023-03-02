@@ -1,6 +1,7 @@
 ﻿using System.Data.Common;
 using System.Drawing;
 using PuzzleCube;
+using static System.Net.Mime.MediaTypeNames;
 
 internal class Program
 {
@@ -8,14 +9,29 @@ internal class Program
 
     private static void Main(string[] args)
     {
-        Banner();
+        WelcomeBanner();
         int cubeSize = GetCubeSize();
         TwistableCube cube = new TwistableCube(cubeSize);
-        cube.RandomizeCube();
+        Console.Write("Would you like to restore a previous cube or play with a new randomized cube 'Y'/'N'? ");
+        string loadFilePermission = Console.ReadLine()!;
         Console.Clear();
+        if (loadFilePermission.ToUpper() == "Y")
+        {
+            try
+            {
+                cube = LoadCubeFromFile(cubeSize);
+            }
+            catch
+            {
+                Console.WriteLine("ERROR: File not found - Loading random cube");
+                cube.RandomizeCube();
+            }
+        }
+        else
+            cube.RandomizeCube();
         Display3D(cube);
         bool viewAs3DCube = true;
-        bool cheatMode = false;
+        bool cheatModeActive = false;
         string command;
         do
         {
@@ -23,12 +39,21 @@ internal class Program
             Console.Clear();
             switch (command)
             {
+                case "SAVE":
+                    Task task = SaveCubeToFile(cube);
+                    break;
+                case "HELP":
+                    string helpText = System.IO.File.ReadAllText(@"../../../help.txt");
+                    Console.WriteLine(helpText);
+                    Console.ReadLine();
+                    Console.Clear();
+                    break;
                 case "V":
                     viewAs3DCube = !viewAs3DCube;
                     break;
                 case "UUDDLRLRBASTART":
-                    cheatMode = !cheatMode;
-                    if (cheatMode)
+                    cheatModeActive = !cheatModeActive;
+                    if (cheatModeActive)
                         Console.WriteLine("Cheat Mode Activated");
                     else
                         Console.WriteLine("Cheat Mode Deactivated");
@@ -48,7 +73,7 @@ internal class Program
                 Display3D(cube);
             else
                 Display2D(cube);
-            if (cheatMode && cube.PreviousMoves.Count > 0)
+            if (cheatModeActive && cube.PreviousMoves.Count > 0)
                 cube.PrintPreviousMoves();
             if (cube.IsSolved())
             {
@@ -58,7 +83,7 @@ internal class Program
         } while (command != "Q");
     }
 
-    static void Banner()
+    static void WelcomeBanner()
     {
         Console.WriteLine("         Welcome to Puzzle Cube!!!");
         Console.WriteLine();
@@ -107,9 +132,10 @@ internal class Program
 
     static string GetCommand()
     {
-        Console.WriteLine("Enter 'X', 'Y', or 'Z' to rotate the cube clockwise around that axis");
+        Console.WriteLine("Enter 'X', 'Y', or 'Z' to rotate the cube clockwise a quarter turn around that axis");
         Console.WriteLine("Enter 'U', 'D', 'R', 'L', 'F', or 'B' to twist that face of the cube clockwise");
         Console.WriteLine("Followed by a number for which layer you would like to twist");
+        Console.WriteLine("Enter 'HELP' for more information on the commands");
         Console.WriteLine("Enter 'Q' to stop playing.");
         Console.Write("Command: ");
         string command = Console.ReadLine()!;
@@ -154,7 +180,7 @@ internal class Program
     }
 
     static void PrintFaceRow(int[,] face, int row)
-    {
+    {// Helper function that prints one row of a face on a single line
         for(int column = 0; column < face.GetLength(1); column++)
         {
             Console.BackgroundColor = GetColor(face[row, column]);
@@ -169,7 +195,7 @@ internal class Program
         int totalLines = cube.SideLength * 8 - 1;
         for (int line = 0; line < totalLines; line++)
         {
-            PrintSpaces(line, totalLines);
+            PrintSpacesFor3DView(line, totalLines);
             if((line + 1) % 4 != 0)
             {
                 if (line < totalLines / 2)
@@ -195,8 +221,8 @@ internal class Program
         Console.WriteLine();
     }
 
-    static void PrintSpaces(int line, int totalLines)
-    {
+    static void PrintSpacesFor3DView(int line, int totalLines)
+    {// Adds the correct spaces at the beginning of a line to display 3D view of cube
         Console.BackgroundColor = GetColor(0);
         int numSpaces = Math.Abs(line - totalLines / 2);
         for (int i = 0; i < numSpaces; i++)
@@ -209,10 +235,10 @@ internal class Program
     }
 
     static void PrintRightFace(BaseCube cube, int line)
-    {
+    {// Writes on the line the cells of the right face of the cube
         if (line == 0 || line == (8 * cube.SideLength - 2))
             return;
-        List<int[]> cells = GetCells(cube.SideLength, line);
+        List<int[]> cells = GetCellsOfRightFace(cube.SideLength, line);
         switch(line % 4)
         {
             case 1:
@@ -245,8 +271,8 @@ internal class Program
         }
     }
 
-    static List<int[]> GetCells(int SideLength, int line)
-    {
+    static List<int[]> GetCellsOfRightFace(int SideLength, int line)
+    {// Finds the cells of the right face of the cube that are printed on the line
         List<int[]> cells = new List<int[]>();
         if (line == 1)
         {
@@ -266,7 +292,7 @@ internal class Program
     }
 
     static List<int[]> GetDiagonalCells(int SideLength, int line)
-    {
+    {// Determines which cells are on the the diagonal of the right face
         List<int[]> cells = new List<int[]>();
         int diagonal = (line - 2) / 4 + 1;
         int numOfCells = SideLength - Math.Abs(SideLength - diagonal);
@@ -289,7 +315,7 @@ internal class Program
     }
 
     static List<int[]> WeaveLists(List<int[]> list1, List<int[]> list2)
-    {
+    {// Combines two lists by alternating list items starting with the larger list
         List<int[]> wovenList = new List<int[]>();
         if(list1.Count < list2.Count)
         {
@@ -319,5 +345,22 @@ internal class Program
             case 6: return ConsoleColor.Yellow;
             default: throw new Exception("ERROR: Color out of bounds");
         }
+    }
+
+    static async Task SaveCubeToFile(BaseCube cube)
+    {
+        Console.WriteLine("Saving File");
+        string textToSave = String.Join("", cube.PreviousMoves);
+        string fileName = $"cube{cube.SideLength.ToString()}.txt";
+        await File.WriteAllTextAsync(fileName, textToSave);
+    }
+
+    static TwistableCube LoadCubeFromFile(int cubeSize)
+    {
+        TwistableCube cube = new TwistableCube(cubeSize);
+        string fileName = $"cube{cubeSize.ToString()}.txt";
+        string sequenceToProcess = System.IO.File.ReadAllText(fileName);
+        cube.ProcessSequence(sequenceToProcess);
+        return cube;
     }
 }

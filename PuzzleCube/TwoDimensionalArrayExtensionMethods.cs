@@ -3,142 +3,142 @@ namespace PuzzleCube
 {
 	public static class TwoDimensionalArrayExtensionMethods
 	{
-		/// <summary>
-		/// Returns the row at rowIndex of the 2d array as an array
-		/// </summary>
-		/// <param name="arr"></param>
-		/// <param name="rowIndex"></param>
-		/// <returns></returns>
-		public static int[] GetRow(this int[,] arr, int rowIndex)
+        /// <summary>
+        /// Returns the row at rowIndex of array2D as an array
+        /// </summary>
+        /// <param name="array2D"></param>
+        /// <param name="rowIndex"></param>
+        /// <returns></returns>
+        public static int[] GetRow(this int[,] array2D, int rowIndex)
 		{
-			int[] row = new int[arr.GetLength(0)];
-			for (int column = 0; column < arr.GetLength(0); column++)
-				row[column] = arr[rowIndex, column];
+			int[] row = new int[array2D.GetLength(0)];
+			for (int column = 0; column < array2D.GetLength(0); column++)
+				row[column] = array2D[rowIndex, column];
 			return row;
 		}
 
         /// <summary>
-        /// Returns the reversed row at rowIndex of the 2d array as an array
+        /// Returns the reversed row at rowIndex of array2D as an array
         /// </summary>
-        /// <param name="arr"></param>
+        /// <param name="array2D"></param>
         /// <param name="rowIndex"></param>
         /// <returns></returns>
-        public static int[] GetReverseRow(this int[,] arr, int rowIndex)
+        public static int[] GetReverseRow(this int[,] array2D, int rowIndex)
         {
-            int[] row = new int[arr.GetLength(0)];
-            for (int column = 0; column < arr.GetLength(0); column++)
-                row[column] = arr[rowIndex, column];
+            int[] row = new int[array2D.GetLength(0)];
+            for (int column = 0; column < array2D.GetLength(0); column++)
+                row[column] = array2D[rowIndex, column];
 			Array.Reverse(row);
             return row;
         }
 
         /// <summary>
-        /// Returns the column at columnIndex of the 2d array as an array
+        /// Returns the column at columnIndex of array2D as an array
         /// </summary>
-        /// <param name="arr"></param>
+        /// <param name="array2D"></param>
         /// <param name="columnIndex"></param>
         /// <returns></returns>
-        public static int[] GetColumn(this int[,] arr, int columnIndex)
+        public static int[] GetColumn(this int[,] array2D, int columnIndex)
 		{
-			int[] column = new int[arr.GetLength(1)];
-			for (int row = 0; row < arr.GetLength(1); row++)
-				column[row] = arr[row, columnIndex];
+			int[] column = new int[array2D.GetLength(1)];
+			for (int row = 0; row < array2D.GetLength(1); row++)
+				column[row] = array2D[row, columnIndex];
 			return column;
 		}
 
         /// <summary>
-        /// Returns the reversed column at columnIndex of the 2d array as an array
+        /// Returns the reversed column at columnIndex of array2D as an array
         /// </summary>
-        /// <param name="arr"></param>
+        /// <param name="array2D"></param>
         /// <param name="columnIndex"></param>
         /// <returns></returns>
-        public static int[] GetReverseColumn(this int[,] arr, int columnIndex)
+        public static int[] GetReverseColumn(this int[,] array2D, int columnIndex)
         {
-            int[] column = new int[arr.GetLength(1)];
-            for (int row = 0; row < arr.GetLength(1); row++)
-                column[row] = arr[row, columnIndex];
+            int[] column = new int[array2D.GetLength(1)];
+            for (int row = 0; row < array2D.GetLength(1); row++)
+                column[row] = array2D[row, columnIndex];
 			Array.Reverse(column);
             return column;
         }
 
         /// <summary>
-        /// Assigns arrayToAssign to the column at columnIndex of the 2d array
+        /// Assigns arrayToAssign to the column at columnIndex of array2D
         /// </summary>
-        /// <param name="arr"></param>
+        /// <param name="array2D"></param>
         /// <param name="columnIndex"></param>
         /// <param name="arrayToAssign"></param>
-        public static void AssignArrayToColumn(this int[,] arr, int columnIndex, int[] arrayToAssign)
+        public static void AssignArrayToColumn(this int[,] array2D, int columnIndex, int[] arrayToAssign)
 		{
-            if (arr.GetLength(1) != arrayToAssign.Length)
+            if (array2D.GetLength(1) != arrayToAssign.Length)
                 throw new Exception("ERROR: The array is not the correct length for the column");
-            for (int row = 0; row < arr.GetLength(0); row++)
-				arr[row, columnIndex] = arrayToAssign[row];
+            for (int row = 0; row < array2D.GetLength(0); row++)
+				array2D[row, columnIndex] = arrayToAssign[row];
 		}
 
-		/// <summary>
-		/// Assigns arrayToAssign to the row at rowIndex of the 2d array
-		/// </summary>
-		/// <param name="arr"></param>
-		/// <param name="rowIndex"></param>
-		/// <param name="arrayToAssign"></param>
-		public static void AssignArrayToRow(this int[,] arr, int rowIndex, int[] arrayToAssign)
+        /// <summary>
+        /// Assigns arrayToAssign to the row at rowIndex of array2D
+        /// </summary>
+        /// <param name="array2D"></param>
+        /// <param name="rowIndex"></param>
+        /// <param name="arrayToAssign"></param>
+        public static void AssignArrayToRow(this int[,] array2D, int rowIndex, int[] arrayToAssign)
 		{
-			if (arr.GetLength(0) != arrayToAssign.Length)
+			if (array2D.GetLength(0) != arrayToAssign.Length)
 				throw new Exception("ERROR: The array is not the correct length for the row");
-			for (int column = 0; column < arr.GetLength(1); column++)
-				arr[rowIndex, column] = arrayToAssign[column];
+			for (int column = 0; column < array2D.GetLength(1); column++)
+				array2D[rowIndex, column] = arrayToAssign[column];
 		}
 
-		/// <summary>
-		/// Rotates a square 2D array arr a quarter turn clockwise quarterTurns number of times
-		/// </summary>
-		/// <param name="arr"></param>
-		/// <param name="quarterTurns"></param>
-		public static void Rotate2DArray(this int[,] arr, int quarterTurns)
+        /// <summary>
+        /// Rotates the square array2D a quarter turn clockwise quarterTurns number of times
+        /// </summary>
+        /// <param name="array2D"></param>
+        /// <param name="quarterTurns"></param>
+        public static void Rotate2DArray(this int[,] array2D, int quarterTurns)
 		{
-			if (arr.GetLength(0) != arr.GetLength(1))
+			if (array2D.GetLength(0) != array2D.GetLength(1))
 				throw new Exception("ERROR: The 2D array is not square");
-			int[,] newArr = new int[arr.GetLength(1), arr.GetLength(0)];
+			int[,] newArr = new int[array2D.GetLength(1), array2D.GetLength(0)];
 			for(int quarterRotations = 0; quarterRotations < quarterTurns; quarterRotations++)
 			{
 				int columnIndex;
-				for(int row = 0; row < arr.GetLength(0); row++)
+				for(int row = 0; row < array2D.GetLength(0); row++)
 				{
 					columnIndex = newArr.GetLength(1) - 1 - row;
-					newArr.AssignArrayToColumn(columnIndex, arr.GetRow(row));
+					newArr.AssignArrayToColumn(columnIndex, array2D.GetRow(row));
 				}
-				for (int row = 0; row < arr.GetLength(0); row++)
-					arr.AssignArrayToRow(row, newArr.GetRow(row));
+				for (int row = 0; row < array2D.GetLength(0); row++)
+					array2D.AssignArrayToRow(row, newArr.GetRow(row));
 			}
 		}
 
-		/// <summary>
-		/// Assigns fillValue to each cell in the 2D array arr
-		/// </summary>
-		/// <param name="arr"></param>
-		/// <param name="fillValue"></param>
-		public static void Fill2DArray(this int[,] arr, int fillValue)
+        /// <summary>
+        /// Assigns fillValue to each cell in array2D
+        /// </summary>
+        /// <param name="array2D"></param>
+        /// <param name="fillValue"></param>
+        public static void Fill2DArray(this int[,] array2D, int fillValue)
 		{
-			for(int row = 0; row < arr.GetLength(0); row++)
+			for(int row = 0; row < array2D.GetLength(0); row++)
 			{
-				for (int column = 0; column < arr.GetLength(1); column++)
-					arr[row, column] = fillValue;
+				for (int column = 0; column < array2D.GetLength(1); column++)
+					array2D[row, column] = fillValue;
 			}
 		}
 
 		/// <summary>
 		/// Returns true if all cells have the same value, otherwise returns false
 		/// </summary>
-		/// <param name="arr"></param>
+		/// <param name="array2D"></param>
 		/// <returns></returns>
-		public static bool AllCellsEqual(this int[,] arr)
+		public static bool AllCellsEqual(this int[,] array2D)
 		{
-			int cellValue = arr[0, 0];
-			for(int row = 0; row < arr.GetLength(0); row++)
+			int cellValue = array2D[0, 0];
+			for(int row = 0; row < array2D.GetLength(0); row++)
 			{
-				for(int column = 0; column < arr.GetLength(1); column++)
+				for(int column = 0; column < array2D.GetLength(1); column++)
 				{
-					if (arr[row, column] != cellValue)
+					if (array2D[row, column] != cellValue)
 						return false;
 				}
 			}
