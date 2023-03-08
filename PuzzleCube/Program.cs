@@ -133,8 +133,8 @@ internal class Program
     static string GetCommand()
     {
         Console.WriteLine("Enter 'X', 'Y', or 'Z' to rotate the cube clockwise a quarter turn around that axis");
-        Console.WriteLine("Enter 'U', 'D', 'R', 'L', 'F', or 'B' to twist that face of the cube clockwise");
-        Console.WriteLine("Followed by a number for which layer you would like to twist");
+        Console.WriteLine("Enter 'U', 'D', 'R', 'L', 'F', or 'B' to twist that face of the cube clockwise a quarter turn");
+        Console.WriteLine("Followed by a number corresponding to the layer you would like to twist");
         Console.WriteLine("Enter 'SAVE' to save your cube for later");
         Console.WriteLine("Enter 'HELP' for more information on the commands");
         Console.WriteLine("Enter 'Q' to stop playing.");
