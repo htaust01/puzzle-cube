@@ -1,6 +1,11 @@
 ﻿using System;
 namespace PuzzleCube
 {
+    /// <summary>
+    /// A simulation of a cube with a square 2D array on each face.
+    /// The cube can be rotated about the x axis, the y axis, and the z axis
+    /// and the faces will reorient themselves to how they should be.
+    /// </summary>
 	public class BaseCube
 	{
 		public int SideLength { get; set; }
@@ -80,18 +85,12 @@ namespace PuzzleCube
 
         public bool IsSolved()
         {
-            if (!Up.AllCellsEqual())
-                return false;
-            if (!Down.AllCellsEqual())
-                return false;
-            if (!Right.AllCellsEqual())
-                return false;
-            if (!Left.AllCellsEqual())
-                return false;
-            if (!Front.AllCellsEqual())
-                return false;
-            if (!Back.AllCellsEqual())
-                return false;
+            if (!Up.AllCellsEqual()) return false;
+            if (!Down.AllCellsEqual()) return false;
+            if (!Right.AllCellsEqual()) return false;
+            if (!Left.AllCellsEqual()) return false;
+            if (!Front.AllCellsEqual()) return false;
+            if (!Back.AllCellsEqual()) return false;
             return true;
         }
 
@@ -123,10 +122,7 @@ namespace PuzzleCube
             int index = 0;
             while (index < sequence.Length)
             {
-                if (!this.PossibleMoves.Contains(sequence[index].ToString()))
-                {
-                    return false;
-                }
+                if (!this.PossibleMoves.Contains(sequence[index].ToString())) return false;
                 index++;
                 if (index < sequence.Length)
                 {
@@ -135,13 +131,11 @@ namespace PuzzleCube
                         int number = int.Parse(sequence[index].ToString());
                         if (rotations.Contains(sequence[index - 1].ToString()))
                         {
-                            if (number < 1 || number > 3)
-                                return false;
+                            if (number < 1 || number > 3) return false;
                         }
                         else
                         {
-                            if (number < 1 || number > this.SideLength)
-                                return false;
+                            if (number < 1 || number > this.SideLength) return false;
                         }
                         index++;
                     }
@@ -160,8 +154,7 @@ namespace PuzzleCube
                 int totalQuarterTurns = 1;
                 if (index < sequence.Length)
                 {
-                    if (int.TryParse(sequence[index].ToString(), out totalQuarterTurns))
-                        index++;
+                    if (int.TryParse(sequence[index].ToString(), out totalQuarterTurns)) index++;
                 }
                 switch (move)
                 {
@@ -182,12 +175,6 @@ namespace PuzzleCube
                 }
             }
         }
-
-        // Need to do research on whether a class method can return an object of said class
-        //public void SaveCubeToFile()
-        //{
-
-        //}
     }
 }
 

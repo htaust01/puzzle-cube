@@ -1,6 +1,10 @@
 ﻿using System;
 namespace PuzzleCube
 {
+    /// <summary>
+    /// A cube that inherits from BaseCube that is also able to have each layer of the cube rotate
+    /// like a Rubik's cube.
+    /// </summary>
 	public class TwistableCube : BaseCube
 	{
         public TwistableCube(int sideLength = 2) : base(sideLength)

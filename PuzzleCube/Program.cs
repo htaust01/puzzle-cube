@@ -12,7 +12,7 @@ internal class Program
         WelcomeBanner();
         int cubeSize = GetCubeSize();
         TwistableCube cube = new TwistableCube(cubeSize);
-        Console.Write("Would you like to restore a previous cube or play with a new randomized cube 'Y'/'N'? ");
+        Console.Write("Would you like to restore a previous cube 'Y'/'N'? ");
         string loadFilePermission = Console.ReadLine()!;
         Console.Clear();
         if (loadFilePermission.ToUpper() == "Y")
@@ -135,6 +135,7 @@ internal class Program
         Console.WriteLine("Enter 'X', 'Y', or 'Z' to rotate the cube clockwise a quarter turn around that axis");
         Console.WriteLine("Enter 'U', 'D', 'R', 'L', 'F', or 'B' to twist that face of the cube clockwise");
         Console.WriteLine("Followed by a number for which layer you would like to twist");
+        Console.WriteLine("Enter 'SAVE' to save your cube for later");
         Console.WriteLine("Enter 'HELP' for more information on the commands");
         Console.WriteLine("Enter 'Q' to stop playing.");
         Console.Write("Command: ");
@@ -349,10 +350,10 @@ internal class Program
 
     static async Task SaveCubeToFile(BaseCube cube)
     {
-        Console.WriteLine("Saving File");
         string textToSave = String.Join("", cube.PreviousMoves);
         string fileName = $"cube{cube.SideLength.ToString()}.txt";
         await File.WriteAllTextAsync(fileName, textToSave);
+        Console.WriteLine("File Saved");
     }
 
     static TwistableCube LoadCubeFromFile(int cubeSize)
