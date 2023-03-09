@@ -135,6 +135,7 @@ namespace PuzzleCube
 
         public void PrintPreviousMoves()
         {
+            if (this.PreviousMoves.Count == 0) return;
             for (int i = 0; i < this.PreviousMoves.Count; i++)
                 Console.Write(this.PreviousMoves[i]);
             Console.WriteLine();

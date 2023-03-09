@@ -6,87 +6,23 @@ using static System.Net.Mime.MediaTypeNames;
 internal class Program
 {
     public static ConsoleColor initialBackgroundColor = Console.BackgroundColor;
+    public static string[] exitStrings = { "Q", "QUIT", "EXIT" };
 
     private static void Main(string[] args)
     {
+        
         WelcomeBanner();
-        int cubeSize = GetCubeSize();
-        TwistableCube cube = new TwistableCube(cubeSize);
-        Console.Write("Would you like to restore a previous cube 'Y'/'N'? ");
-        string loadFilePermission = Console.ReadLine()!;
-        Console.Clear();
-        if (loadFilePermission.ToUpper() == "Y")
+        TwistableCube cube = new TwistableCube();
+        while (true)
         {
-            try
-            {
-                cube = LoadCubeFromFile(cubeSize);
-            }
-            catch
-            {
-                Console.WriteLine("ERROR: File not found - Loading random cube");
-                cube.RandomizeCube();
-            }
+            cube = MakePuzzleCube();
+            PlayWithCube(cube);
         }
-        else
-            cube.RandomizeCube();
-        Display3D(cube);
-        bool viewAs3DCube = true;
-        bool cheatModeActive = false;
-        string command;
-        do
-        {
-            command = GetCommand();
-            Console.Clear();
-            switch (command)
-            {
-                case "SAVE":
-                    Task task = SaveCubeToFile(cube);
-                    break;
-                case "HELP":
-                    string helpText = System.IO.File.ReadAllText(@"../../../help.txt");
-                    Console.WriteLine(helpText);
-                    Console.ReadLine();
-                    Console.Clear();
-                    break;
-                case "V":
-                    viewAs3DCube = !viewAs3DCube;
-                    break;
-                case "UUDDLRLRBASTART":
-                    cheatModeActive = !cheatModeActive;
-                    if (cheatModeActive)
-                        Console.WriteLine("Cheat Mode Activated");
-                    else
-                        Console.WriteLine("Cheat Mode Deactivated");
-                    Console.WriteLine();
-                    break;
-                default:
-                    if (cube.IsValidSequence(command))
-                        cube.ProcessSequence(command);
-                    else
-                    {
-                        Console.WriteLine("Invalid Command");
-                        Console.WriteLine();
-                    }
-                    break;
-            }
-            if (viewAs3DCube)
-                Display3D(cube);
-            else
-                Display2D(cube);
-            if (cheatModeActive && cube.PreviousMoves.Count > 0)
-                cube.PrintPreviousMoves();
-            if (cube.IsSolved())
-            {
-                Console.WriteLine("You have solved the Cube!");
-                Console.WriteLine();
-            }
-        } while (command != "Q");
     }
 
     static void WelcomeBanner()
     {
-        Console.WriteLine("         Welcome to Puzzle Cube!!!");
-        Console.WriteLine();
+        Console.WriteLine("         Welcome to Puzzle Cube!!!\n");
         Console.WriteLine("            ______ ______ ______");
         Console.WriteLine("          /      /      /      /\\");
         Console.WriteLine("         /      /      /      /  \\");
@@ -105,11 +41,28 @@ internal class Program
         Console.WriteLine("       \\______\\______\\______\\/    \\/");
         Console.WriteLine("        \\      \\      \\      \\    /");
         Console.WriteLine("         \\      \\      \\      \\  /");
-        Console.WriteLine("          \\______\\______\\______\\/");
-        Console.WriteLine();
-        Console.WriteLine();
+        Console.WriteLine("          \\______\\______\\______\\/\n\n");
         Console.Write("           Press Enter to Play");
         Console.ReadLine();
+    }
+
+    static TwistableCube MakePuzzleCube()
+    {
+        int cubeSize = GetCubeSize();
+        TwistableCube cube = new TwistableCube(cubeSize);
+        string fileName = $"cube{cubeSize.ToString()}.txt";
+        if (File.Exists(fileName))
+        {
+            Console.Write("A saved cube of this size exists, would you like to restore this cube 'Y'/'N'? ");
+            string loadFilePermission = Console.ReadLine()!;
+            if (loadFilePermission.ToUpper() == "Y")
+            {
+                cube = LoadCubeFromFile(cubeSize);
+                return cube;
+            }
+        }
+        cube.RandomizeCube();
+        return cube;
     }
 
     static int GetCubeSize()
@@ -120,10 +73,14 @@ internal class Program
         {
             Console.WriteLine();
             Console.WriteLine("Enter a number between '1' and '9' to choose the size cube you would like to solve.");
-            Console.WriteLine("For example enter '3' if you would like to play with a 3x3x3 cube");
-            Console.WriteLine("Note: It is difficult to play with the larger sizes as they don't fit on the screen well");
+            Console.WriteLine("For example, enter '3' if you would like to play with a 3x3x3 cube.");
+            Console.WriteLine("Note: It is difficult to play with the larger sizes as they don't fit on the screen well.");
+            Console.WriteLine("Enter 'Q' to quit.");
             Console.Write("Size: ");
             cubeSize = Console.ReadLine()!;
+            cubeSize = cubeSize.ToUpper();
+            if (exitStrings.Contains(cubeSize))
+                Environment.Exit(0);
             if (!possibleCubeSizes.Contains(cubeSize))
                 Console.WriteLine("You have entered an invalid size");
         } while (!possibleCubeSizes.Contains(cubeSize));
@@ -132,16 +89,59 @@ internal class Program
 
     static string GetCommand()
     {
-        Console.WriteLine("Enter 'X', 'Y', or 'Z' to rotate the cube clockwise a quarter turn around that axis");
+        Console.WriteLine("Enter 'X', 'Y', or 'Z' to rotate the cube clockwise a quarter turn around that axis.");
         Console.WriteLine("Enter 'U', 'D', 'R', 'L', 'F', or 'B' to twist that face of the cube clockwise a quarter turn");
-        Console.WriteLine("Followed by a number corresponding to the layer you would like to twist");
-        Console.WriteLine("Enter 'SAVE' to save your cube for later");
-        Console.WriteLine("Enter 'HELP' for more information on the commands");
-        Console.WriteLine("Enter 'Q' to stop playing.");
+        Console.WriteLine("Followed by a number corresponding to the layer you would like to twist.");
+        Console.WriteLine("Enter 'MENU' to change cube size, 'HELP' for more information on the commands, or 'Q' to stop playing");
         Console.Write("Command: ");
         string command = Console.ReadLine()!;
-        command = command.ToUpper();
-        return command;
+        return command.ToUpper();
+    }
+
+    static void PlayWithCube(TwistableCube cube)
+    {
+        bool viewAs3DCube = true;
+        bool cheatModeActive = false;
+        string command = "";
+        while (!exitStrings.Contains(command))
+        {
+            Console.Clear();
+            if (viewAs3DCube)
+                Display3D(cube);
+            else
+                Display2D(cube);
+            if (cheatModeActive)
+                cube.PrintPreviousMoves();
+            if (cube.IsSolved())
+                Console.WriteLine("You have solved the Cube!\n");
+            command = GetCommand();
+            if (exitStrings.Contains(command))
+            {
+                AskToSaveCube(cube);
+                Environment.Exit(0);
+            }
+            if (command == "MENU")
+            {
+                AskToSaveCube(cube);
+                Console.Clear();
+                return;
+            }
+            if (command == "V")
+                viewAs3DCube = !viewAs3DCube;
+            else if (command == "UUDDLRLRBASTART")
+                cheatModeActive = !cheatModeActive;
+            else if (command == "HELP")
+            {
+                string helpText = System.IO.File.ReadAllText(@"../../../help.txt");
+                Console.WriteLine(helpText);
+                Console.ReadLine();
+                Console.Clear();
+            }
+            else if (cube.IsValidSequence(command))
+                cube.ProcessSequence(command);
+            else
+                Console.WriteLine("Invalid Command\n");
+        }
     }
 
     static void Display2D(BaseCube cube)
@@ -348,12 +348,28 @@ internal class Program
         }
     }
 
+    static void AskToSaveCube(TwistableCube cube)
+    {
+        if (cube.IsSolved()) return;
+        Console.Write("Would you like to save this cube for later 'Y'/'N'? ");
+        string command = Console.ReadLine()!;
+        if (command.ToUpper() != "Y") return;
+        string fileName = $"cube{cube.SideLength.ToString()}.txt";
+        if (File.Exists(fileName))
+        {
+            Console.Write("A save file already exists, do you want to overwrite it 'Y'/'N'? ");
+            command = Console.ReadLine()!;
+            if (command.ToUpper() != "Y") return;
+        }
+        Task saveFileTask = SaveCubeToFile(cube);
+        return;
+    }
+
     static async Task SaveCubeToFile(BaseCube cube)
     {
         string textToSave = String.Join("", cube.PreviousMoves);
         string fileName = $"cube{cube.SideLength.ToString()}.txt";
         await File.WriteAllTextAsync(fileName, textToSave);
-        Console.WriteLine("File Saved");
     }
 
     static TwistableCube LoadCubeFromFile(int cubeSize)

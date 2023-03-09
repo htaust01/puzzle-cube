@@ -17,7 +17,12 @@ The 'R' face is the face on the right
 'R', 'L', 'U', 'D', 'F', and 'B' are the layer twists and the number after is the layer
 The layer must be between '1' and the size of the cube. If no layer is entered it defaults to '1'
 All twist are clockwise relative to the face
-For example 'F2' twists the second layer of the front face clockwise
+For example, 'F2' twists the second layer of the front face clockwise one quarter turn
+
+Multiple twist can be entered in one command
+For example, 'U2U2U2R1F1' twists the second layer of the up face clockwise three quarter turns,
+then twists the first layer of the right face clockwise one quarter turn, then twists the
+first layer of the front face clockwise one quarter turn
 
 Type 'V' to change to a 2D representation of the cube, and type 'V' again to switch back to 3D
 
