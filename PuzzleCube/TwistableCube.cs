@@ -13,7 +13,7 @@ namespace PuzzleCube
             this.PossibleMoves.AddRange(newMoves);
         }
 
-        public void TwistUpSingleLayer(int n = 1)
+        private void TwistUpSingleLayer(int n = 1)
         {
             if (n < 1 || n > this.SideLength)
                 throw new Exception("ERROR: n is out of bounds");
@@ -33,7 +33,7 @@ namespace PuzzleCube
                 this.UpdatePreviousMoves($"U{n}");
         }
 
-        public void TwistDownSingleLayer(int n = 1)
+        private void TwistDownSingleLayer(int n = 1)
         {
             if (n < 1 || n > this.SideLength)
                 throw new Exception("ERROR: n is out of bounds");
@@ -53,7 +53,7 @@ namespace PuzzleCube
                 this.UpdatePreviousMoves($"D{n}");
         }
 
-        public void TwistRightSingleLayer(int n = 1)
+        private void TwistRightSingleLayer(int n = 1)
         {
             if (n < 1 || n > this.SideLength)
                 throw new Exception("ERROR: n is out of bounds");
@@ -73,7 +73,7 @@ namespace PuzzleCube
                 this.UpdatePreviousMoves($"R{n}");
         }
 
-        public void TwistLeftSingleLayer(int n = 1)
+        private void TwistLeftSingleLayer(int n = 1)
         {
             if (n < 1 || n > this.SideLength)
                 throw new Exception("ERROR: n is out of bounds");
@@ -93,7 +93,7 @@ namespace PuzzleCube
                 this.UpdatePreviousMoves($"L{n}");
         }
 
-        public void TwistFrontSingleLayer(int n = 1)
+        private void TwistFrontSingleLayer(int n = 1)
         {
             if (n < 1 || n > this.SideLength)
                 throw new Exception("ERROR: n is out of bounds");
@@ -113,7 +113,7 @@ namespace PuzzleCube
                 this.UpdatePreviousMoves($"F{n}");
         }
 
-        public void TwistBackSingleLayer(int n = 1)
+        private void TwistBackSingleLayer(int n = 1)
         {
             if (n < 1 || n > this.SideLength)
                 throw new Exception("ERROR: n is out of bounds");
