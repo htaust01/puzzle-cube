@@ -55,7 +55,8 @@ internal class Program
         {
             Console.Write("A saved cube of this size exists, would you like to restore this cube 'Y'/'N'? ");
             string loadFilePermission = Console.ReadLine()!;
-            if (loadFilePermission.ToUpper() == "Y")
+            loadFilePermission = loadFilePermission.Replace(" ", "").ToUpper();
+            if (loadFilePermission == "Y")
             {
                 cube = LoadCubeFromFile(cubeSize);
                 return cube;
@@ -78,7 +79,8 @@ internal class Program
             Console.WriteLine("Enter 'Q' to quit");
             Console.Write("Size: ");
             cubeSize = Console.ReadLine()!;
-            if (exitStrings.Contains(cubeSize.ToUpper()))
+            cubeSize = cubeSize.Replace(" ", "").ToUpper();
+            if (exitStrings.Contains(cubeSize))
                 Environment.Exit(0);
             if (!possibleCubeSizes.Contains(cubeSize))
                 Console.WriteLine("You have entered an invalid size");
@@ -94,7 +96,7 @@ internal class Program
         Console.WriteLine("Enter 'MENU' to change cube size, 'HELP' for more information on the commands, or 'Q' to quit");
         Console.Write("Command: ");
         string command = Console.ReadLine()!;
-        return command.ToUpper();
+        return command.Replace(" ", "").ToUpper();
     }
 
     static void PlayWithCube(TwistableCube cube)
@@ -149,13 +151,15 @@ internal class Program
         if (cube.IsSolved()) return;
         Console.Write("Would you like to save this cube for later 'Y'/'N'? ");
         string command = Console.ReadLine()!;
-        if (command.ToUpper() != "Y") return;
+        command = command.Replace(" ", "").ToUpper();
+        if (command!= "Y") return;
         string fileName = $"cube{cube.SideLength.ToString()}.txt";
         if (File.Exists(fileName))
         {
             Console.Write("A save file already exists, do you want to overwrite it 'Y'/'N'? ");
             command = Console.ReadLine()!;
-            if (command.ToUpper() != "Y") return;
+            command = command.Replace(" ", "").ToUpper();
+            if (command != "Y") return;
         }
         Task saveFileTask = SaveCubeToFile(cube);
         return;
