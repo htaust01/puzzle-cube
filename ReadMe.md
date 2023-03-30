@@ -1,7 +1,7 @@
 # Puzzle Cube
 
 ## About
-PuzzleCube is a console application that simulates a twistable cube puzzle, like a Rubik's cube. It allows you to manipulate a puzzle cube from a 2x2x2 cube up to a 9x9x9 cube. You can rotate the cube along the x axis, y axis, and z axis. You can twist any single layer of the cube by entering the face and layer you would like to twist. The faces are front(F), back(B), up(U), down(D), right(R), and left(L). If no layer is entered it defaults to the first layer. You can also input sequences of moves.
+PuzzleCube is a console application, developed with C# and NET 7, that simulates a twistable cube puzzle, like a Rubik's cube. It allows you to manipulate a puzzle cube from a 2x2x2 cube up to a 9x9x9 cube. You can rotate the cube along the x axis, y axis, and z axis. You can twist any single layer of the cube by entering the face and layer you would like to twist. The faces are front(F), back(B), up(U), down(D), right(R), and left(L). If no layer is entered it defaults to the first layer. You can also input sequences of moves.
 
 Example for 3x3x3 cube: R2
 
